@@ -74,15 +74,15 @@
               // headPageScroll();
             }
 
-            var SidebarHandler = function(){
-              $('#menu-commodity li > a').hover{
-                function(){
-                  $(this).next().show();
-                },
-                function(){
-                  $(this).next().hide();
-                }
-            }
+            // var SidebarHandler = function(){
+            //   $('#menu-commodity li > a').hover{
+            //     function(){
+            //       $(this).next().show();
+            //     },
+            //     function(){
+            //       $(this).next().hide();
+            //     }
+            // }
 
             var pagetopHandler = function(){
               var $pagetop = $('.pagetop');

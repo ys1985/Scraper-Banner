@@ -6,7 +6,7 @@
   <?php
   while ( have_posts() ) : the_post(); ?>
     <div class="grid-item">
-      <a href="#">
+      <a class="thumb_img" href="#">
         <?php if ( has_post_thumbnail() ): // サムネイルを持っているときの処理 ?>
         <?php the_post_thumbnail( 'thumb150' ); ?>
         <?php else: // サムネイルを持っていないときの処理 ?>

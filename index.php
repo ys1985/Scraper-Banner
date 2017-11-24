@@ -8,7 +8,7 @@
       $posts = get_posts( $args );
       if( $posts ) : foreach( $posts as $post) : setup_postdata( $post ); ?>
       <div class="grid-item">
-        <a href="<?php echo get_the_permalink(); ?>">
+        <a class="thumb_img" href="<?php echo get_the_permalink(); ?>">
           <?php if ( has_post_thumbnail() ): // サムネイルを持っているときの処理 ?>
           <?php the_post_thumbnail( 'thumb150' ); ?>
           <?php else: // サムネイルを持っていないときの処理 ?>

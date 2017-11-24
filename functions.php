@@ -104,7 +104,7 @@ function create_post_type() {
      'has_archive' => true,
      'rewrite' => array( 'with_front' => false ),
      'menu_position' => 5,
-     'supports' => array( 'title', 'editor', 'author', 'thumbnail', 'trackbacks', 'custom-fields', 'revisions' ),
+     'supports' => array( 'title', 'author', 'thumbnail', 'trackbacks', 'custom-fields', 'revisions' ),
      'taxonomies' => array( 'genre' ),
    )
  );
@@ -146,7 +146,20 @@ function create_post_type() {
       'singular_label' => '人物',
       'public' => true,
       'show_ui' => true,
-      'rewrite' => array( 'slug' => 'color' )
+      'rewrite' => array( 'slug' => 'person' )
+    )
+  );
+  register_taxonomy(
+    'size',
+    'brands',
+    array(
+      'hierarchical' => true, /* 親子関係が必要なければ false */
+      'update_count_callback' => '_update_post_term_count',
+      'label' => 'サイズ',
+      'singular_label' => 'サイズ',
+      'public' => true,
+      'show_ui' => true,
+      'rewrite' => array( 'slug' => 'size' )
     )
   );
 /* ここまでを追加 */
@@ -170,8 +183,11 @@ foreach( $taxonomies as $taxonomie ) {  //タクソノミー配列を回す
   $html .= '<dl class="search_taxonomie"><dt>' . get_taxonomy($taxonomie)->labels->name . '</dt>';
   $terms = get_terms( $taxonomie, 'hide_empty=0' );   //各タクソノミーのタームを取得
   if ( ! empty( $terms ) && !is_wp_error( $terms ) ){
-    foreach ( $terms as $key => $term ) {  //各タームを回して
-      $html .= '<dd><input type="checkbox" name="' . $term->taxonomy . '[]" value="' . $term->slug . '">' . $term->name . '<span class=="count">（' . $term->count . '）</span>' . '</dd>';  //インプットを作成
+    foreach ( $terms as $key => $term ) {
+      if($term->count > 0){ //各タームを回して
+        $html .= '<dd><input type="checkbox" name="' . $term->taxonomy . '[]" value="' . $term->slug . '">' . $term->name . '<span class=="count">（' . $term->count . '）</span>' . '</dd>';  //インプットを作成
+      }
+
     }
     $html .= '</dl>';
   }
