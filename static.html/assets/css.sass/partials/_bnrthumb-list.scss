@@ -1,0 +1,107 @@
+/******************************************************/
+/* pc _bnrthumb-list
+/******************************************************/
+#bnrthumb-list{
+  max-width:1280px;
+  margin: 0 auto;
+  padding: 40px 0;
+  .post-date{
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 3px;
+  }
+  .grid-item{
+    width:calc(25% - 20px);
+     margin:10px 10px 10px 10px;
+     box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.2);
+    .thumb_img{
+      width: auto;
+      max-height: 250px;
+      vertical-align: bottom;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      // margin-bottom: 8px;
+      img{
+        width: auto;
+        max-height: 250px;
+      }
+    }
+    .post-details-wrap{
+      // background: #f9f9f9;
+      padding: 10px;
+    }
+    dl.post-author{
+      display: flex;
+      justify-content:flex-start;
+      align-items: center;
+      font-size: 12px;
+      dt , dd{
+        line-height: 1;
+      }
+      .ico{
+        width: 40px;
+        box-sizing: border-box;
+        margin-right: 10px;
+        img{
+            width: 40px;
+            border-radius:20px;
+            box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.5);
+        }
+      }
+    }
+
+    dl.post-details{
+      width: 100%;
+      display: table;
+      font-size: 10px;
+      line-height: 1.6;
+      box-sizing: border-box;
+      padding:0px 5px;
+      dt , dd{
+        display: table-cell;
+        text-align: left;
+      }
+      dt{
+        font-weight: bold;
+        width: 25%;
+      }
+      dd{
+        width: 75%;
+        position: relative;
+        padding-left: 1em;
+        &:before{
+          display: block;
+          width: 1em;
+          content: ":";
+          position: absolute;
+          top: 0;
+          left: 0;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width:1280px){
+  #bnrthumb-list{
+    max-width: 960px;
+    .grid-item{
+      width:calc(33.33% - 20px);
+    }
+  }
+}
+
+@media (max-width:767px){
+  #bnrthumb-list{
+    max-width: 100%;
+    .grid-item{
+      width:calc(50% - 20px);
+       margin:0px 10px 20px 10px;
+       dl.post-details{
+         font-size: 10px;
+       }
+    }
+  }
+}
