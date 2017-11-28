@@ -174,7 +174,7 @@ function search_form_html() {
 global $wp_query, $query;
 
 $html = '<form method="post" id="searchform" action="' . home_url( '/' ) . '">';
-$html .= '<input type="text" name="s"  id="s" value="' . $wp_query->get('s') . '" placeholder="検索したいキーワードを入力してください">';
+$html .= '<input class="search_all" type="text" name="s"  id="s" value="' . $wp_query->get('s') . '" placeholder="検索したいキーワードを入力してください">';
 $taxonomies = get_taxonomies( array(  //全タクソノミーを配列で取得
   'public'   => true,
   '_builtin' => false
@@ -185,7 +185,7 @@ foreach( $taxonomies as $taxonomie ) {  //タクソノミー配列を回す
   if ( ! empty( $terms ) && !is_wp_error( $terms ) ){
     foreach ( $terms as $key => $term ) {
       if($term->count > 0){ //各タームを回して
-        $html .= '<dd><input type="checkbox" name="' . $term->taxonomy . '[]" value="' . $term->slug . '">' . $term->name . '<span class=="count">（' . $term->count . '）</span>' . '</dd>';  //インプットを作成
+        $html .= '<dd><input type="checkbox" name="' . $term->taxonomy . '" value="' . $term->slug . '">' . $term->name . '<span class=="count">（' . $term->count . '）</span>' . '</dd>';  //インプットを作成
       }
 
     }

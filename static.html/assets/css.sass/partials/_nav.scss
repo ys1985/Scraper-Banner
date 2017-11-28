@@ -32,7 +32,7 @@
       text-decoration: none;
   }
   .scroller{
-    padding:60px 0px;
+    padding:60px 20px;
   }
   .category-list{
     margin-bottom: 30px;
@@ -41,6 +41,10 @@
     font-size: 18px;
     margin-bottom: 15px;
     padding-left: 20px;
+  }
+
+  .search_taxonomie , .search_all{
+    margin-bottom: 30px;
   }
   ul#menu-commodity{
       & > li{
