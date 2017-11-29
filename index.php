@@ -1,6 +1,5 @@
 <?php get_header(); ?>
 
-
 <div id="bnrthumb-list">
       <?php $args = array(
           'post_type' => 'brands'    //投稿タイプの指定

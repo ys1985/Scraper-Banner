@@ -275,7 +275,7 @@ if ( $query->get( 'post_type' ) === 'brands') {
   $taxonomies = get_taxonomies( array(
     'public'   => true,
     '_builtin' => false
-  ) );
+  ));
 
   //tax_queryを作っていく
   foreach( $taxonomies as $taxonomie ) {
@@ -289,11 +289,38 @@ if ( $query->get( 'post_type' ) === 'brands') {
 
           $slug = $query->get($taxonomie);
           $slug = explode( '+', $slug );
-          $tax_query[] = array(
-            'taxonomy' => $taxonomie,
-            'field' => 'slug',
-            'terms' => $slug,
-            'operator' => 'IN',
+          // $tax_query = array(
+          //   'relation' => 'AND',
+          //   array(
+          //     'taxonomy' => 'brand-category',
+          //     'field' => 'slug',
+          //     'terms' => $slug,
+          //     'operator' => 'IN',
+          //   ),
+          //   array(
+          //     'relation' => 'AND',
+          //     array(
+          //       'taxonomy' => 'color',
+          //       'field' => 'slug',
+          //       'terms' => $slug,
+          //       'operator' => 'IN',
+          //     ),
+          //     array(
+          //       'taxonomy' => 'person',
+          //       'field' => 'slug',
+          //       'terms' => $slug,
+          //       'operator' => 'IN',
+          //     )
+          //   )
+          // );
+          $tax_query = array(
+            'relation' => 'AND',
+            array(
+              'taxonomy' => $taxonomie,
+              'field' => 'slug',
+              'terms' => $slug,
+              'operator' => 'IN',
+            )
           );
           unset($args[$taxonomie]);
           break ;
