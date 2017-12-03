@@ -173,7 +173,16 @@ function create_post_type() {
 function search_form_html() {
 global $wp_query, $query;
 
-$html = '<form method="post" id="searchform" action="' . home_url( '/' ) . '">';
+
+if(is_tax('brand-category')) {
+  $action = home_url( '/' ) . '/brands/brand-category/' . get_query_var('term');
+}
+else {
+  $action = home_url( '/' );
+}
+
+
+$html = '<form method="post" id="searchform" action="' . $action . '">';
 $html .= '<input class="search_all" type="text" name="s"  id="s" value="' . $wp_query->get('s') . '" placeholder="検索したいキーワードを入力してください">';
 $taxonomies = get_taxonomies( array(  //全タクソノミーを配列で取得
   'public'   => true,
@@ -185,7 +194,7 @@ foreach( $taxonomies as $taxonomie ) {  //タクソノミー配列を回す
   if ( ! empty( $terms ) && !is_wp_error( $terms ) ){
     foreach ( $terms as $key => $term ) {
       if($term->count > 0){ //各タームを回して
-        $html .= '<dd><input type="checkbox" name="' . $term->taxonomy . '" value="' . $term->slug . '">' . $term->name . '<span class=="count">（' . $term->count . '）</span>' . '</dd>';  //インプットを作成
+        $html .= '<dd><input type="checkbox" name="' . $term->taxonomy . '[]" value="' . $term->slug . '">' . $term->name . '<span class=="count">（' . $term->count . '）</span>' . '</dd>';  //インプットを作成
       }
 
     }
@@ -193,11 +202,13 @@ foreach( $taxonomies as $taxonomie ) {  //タクソノミー配列を回す
   }
 }
 $html .= '<input type="submit" class="searchsubmit" value="検索する">';
+
+
+
 $html .= '</form>';
 
 echo $html;  //作成したフォームを返す
 }
-
 
 // カスタムクエリ追加
 function myQueryVars( $public_query_vars ) {
@@ -258,6 +269,8 @@ add_filter( 'request', 'myRequest');  //追加クエリ変数・プライベー�
 function myFilter( $query ) {
 global $wp_query;
 
+$query->set("post_type", "brands");
+
 if ( !array_key_exists( 's', $query->query ) ) { //詳細ページの場合
   return $query;  //そのまま表示
 } else {
@@ -276,7 +289,6 @@ if ( $query->get( 'post_type' ) === 'brands') {
     'public'   => true,
     '_builtin' => false
   ));
-
   //tax_queryを作っていく
   foreach( $taxonomies as $taxonomie ) {
     $terms = get_terms( $taxonomie, 'hide_empty=0' );
@@ -313,7 +325,7 @@ if ( $query->get( 'post_type' ) === 'brands') {
           //     )
           //   )
           // );
-          $tax_query = array(
+          $tax_query[] = array(
             'relation' => 'AND',
             array(
               'taxonomy' => $taxonomie,
@@ -342,3 +354,10 @@ if ( $query->get( 'post_type' ) === 'brands') {
 return $query;
 }
 add_filter('pre_get_posts','myFilter');  //クエリを実行する前に呼び出し
+
+//カスタム投稿パーマリンク「/taxonomy/」削除
+// function my_custom_post_type_permalinks_set($termlink, $term, $taxonomy){
+//   var_dump($termlink, $term, $taxonomy);
+// 	return str_replace('/'.$taxonomy.'/', '/', $termlink);
+// }
+// add_filter('term_link', 'my_custom_post_type_permalinks_set',11,3);
