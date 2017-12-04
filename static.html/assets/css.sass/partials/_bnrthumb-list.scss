@@ -11,20 +11,20 @@
     margin-bottom: 3px;
   }
   .grid-item{
-    width:calc(25% - 20px);
+    // width:calc(25% - 20px);
+    width: 300px;
      margin:10px 10px 10px 10px;
      box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.2);
     .thumb_img{
       width: 100%;
-      max-height: 250px;
+      height: 250px;
       vertical-align: bottom;
       display: flex;
       justify-content: center;
       align-items: center;
       overflow: hidden;
-      // margin-bottom: 8px;
       img{
-        width: auto;
+        // width: 100%;
         max-height: 250px;
       }
     }
@@ -88,20 +88,73 @@
   #bnrthumb-list{
     max-width: 960px;
     .grid-item{
-      width:calc(33.33% - 20px);
+      // width:calc(33.33% - 20px);
+      width: 300px;
     }
   }
 }
 
-@media (max-width:767px){
+@media (max-width:1024px){
   #bnrthumb-list{
-    max-width: 100%;
+    max-width: 640px;
     .grid-item{
-      width:calc(50% - 20px);
-       margin:0px 10px 20px 10px;
-       dl.post-details{
-         font-size: 10px;
-       }
+      // width:calc(33.33% - 20px);
+      width: 300px;
     }
   }
 }
+@media (max-width:768px){
+  #bnrthumb-list{
+    max-width: 300px;
+
+    .grid-item{
+      margin: 10px 0;
+      // width:calc(33.33% - 20px);
+      width: 300px;
+    }
+  }
+}
+
+
+
+// @media (max-width:1024px){
+//   #bnrthumb-list{
+//     max-width: 768px;
+//     margin: 0 auto;
+//     padding: 10px;
+//     .grid-item{
+//       // width:calc(33.33% - 20px);
+//       width: 229px;
+//       height: auto;
+//       .thumb_img{
+//         height: auto;
+//         height: 190px;
+//         img{
+//           // width: 100%;
+//           height: 190px;
+//           // max-height: 250px;
+//         }
+//       }
+//     }
+//   }
+// }
+
+// @media (max-width:767px){
+//   #bnrthumb-list{
+//     max-width: 100%;
+//     padding:30px 0px;
+//     .grid-item{
+//       width:calc(50% - 10px);
+//        margin:0px 5px 20px 5px;
+//        box-shadow: none;
+//        .thumb_img{
+//         //  width: auto;
+//          height: 120px;
+//          img{
+//             // height: 120px;
+//            max-height: 120px;
+//          }
+//        }
+//     }
+//   }
+// }

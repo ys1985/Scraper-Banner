@@ -5,8 +5,6 @@
       <?php $args = array(
           'post_type' => 'brands'    //投稿タイプの指定
       );
-
-//      $posts = get_posts( $args );
       if( $posts ) : foreach( $posts as $post) : setup_postdata( $post ); ?>
       <div class="grid-item">
         <a class="thumb_img" href="<?php echo get_the_permalink(); ?>">

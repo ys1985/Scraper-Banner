@@ -3,6 +3,28 @@ add_theme_support('post-thumbnails');
 // add_theme_support( 'menus' );
 
 //========================================================================================
+//管理画面左メニュー 表示設定
+//========================================================================================
+function remove_menus () {
+    global $menu;
+    unset($menu[2]);  // ダッシュボード
+    // unset($menu[4]);  // メニューの線1
+    unset($menu[5]);  // 投稿
+    unset($menu[10]); // メディア
+    // unset($menu[15]); // リンク
+    // unset($menu[20]); // ページ
+    // unset($menu[25]); // コメント
+    // unset($menu[59]); // メニューの線2
+    // unset($menu[60]); // テーマ
+    // unset($menu[65]); // プラグイン
+    // unset($menu[70]); // プロフィール
+    // unset($menu[75]); // ツール
+    // unset($menu[80]); // 設定
+    // unset($menu[90]); // メニューの線3
+}
+add_action('admin_menu', 'remove_menus');
+
+//========================================================================================
 //カスタムメニューの位置を定義する
 //========================================================================================
 register_nav_menus(array(
@@ -181,22 +203,32 @@ else {
   $action = home_url( '/' );
 }
 
-
 $html = '<form method="post" id="searchform" action="' . $action . '">';
 $html .= '<input class="search_all" type="text" name="s"  id="s" value="' . $wp_query->get('s') . '" placeholder="検索したいキーワードを入力してください">';
 $taxonomies = get_taxonomies( array(  //全タクソノミーを配列で取得
   'public'   => true,
   '_builtin' => false
 ) );
-foreach( $taxonomies as $taxonomie ) {  //タクソノミー配列を回す
+
+foreach( $taxonomies as $key => $taxonomie ) {  //タクソノミー配列を回す
   $html .= '<dl class="search_taxonomie"><dt>' . get_taxonomy($taxonomie)->labels->name . '</dt>';
   $terms = get_terms( $taxonomie, 'hide_empty=0' );   //各タクソノミーのタームを取得
+  // if($key == 'color'){
+  //   $html .= '<dd><input class="color-tip" type="checkbox" name="' . $term->taxonomy . '[]" value="' . $term->slug . '">' . $term->name  . '</dd>';  //インプットを作成
+  // }
   if ( ! empty( $terms ) && !is_wp_error( $terms ) ){
     foreach ( $terms as $key => $term ) {
-      if($term->count > 0){ //各タームを回して
-        $html .= '<dd><input type="checkbox" name="' . $term->taxonomy . '[]" value="' . $term->slug . '">' . $term->name . '<span class=="count">（' . $term->count . '）</span>' . '</dd>';  //インプットを作成
+      switch ($taxonomie) {
+        case 'color':
+          $html .= '<dd class="'. $term->slug . '"><input type="checkbox" id="' . $term->slug . '" name="' . $term->taxonomy . '[]" value="' . $term->slug . '"><label for="' . $term->slug . '" class="checkbox">' . $term->name  . '</label></dd>';
+            break;
+        default:
+        $html .= '<dd><input type="checkbox" id="' . $term->slug . '" name="' . $term->taxonomy . '[]" value="' . $term->slug . '"><label for="' . $term->slug . '" class="checkbox">' . $term->name  . '</label></dd>';
+          break;
       }
-
+      // if($term->count > 0){ //各タームを回して
+      //   $html .= '<dd><input type="checkbox" name="' . $term->taxonomy . '[]" value="' . $term->slug . '">' . $term->name  . '</dd>';  //インプットを作成
+      // }
     }
     $html .= '</dl>';
   }
@@ -224,7 +256,7 @@ return $public_query_vars;
 add_filter( 'query_vars', 'myQueryVars' );  //SQL が生成される前に、WordPress のパブリッククエリ変数のリストに対して適用される。
 
 
-//?rent=over-30000+over-135000&post_type=rent&key-money-deposit=30000+40000&s= の様なパラメーターを作る
+//?brands=30000+over-135000&post_type=rent&key-money-deposit=30000+40000&s= の様なパラメーターを作る
 function myRequest( $vars ) {
 $taxonomies = get_taxonomies( array(  //タクソノミー配列取得
   'public'   => true,
@@ -301,30 +333,6 @@ if ( $query->get( 'post_type' ) === 'brands') {
 
           $slug = $query->get($taxonomie);
           $slug = explode( '+', $slug );
-          // $tax_query = array(
-          //   'relation' => 'AND',
-          //   array(
-          //     'taxonomy' => 'brand-category',
-          //     'field' => 'slug',
-          //     'terms' => $slug,
-          //     'operator' => 'IN',
-          //   ),
-          //   array(
-          //     'relation' => 'AND',
-          //     array(
-          //       'taxonomy' => 'color',
-          //       'field' => 'slug',
-          //       'terms' => $slug,
-          //       'operator' => 'IN',
-          //     ),
-          //     array(
-          //       'taxonomy' => 'person',
-          //       'field' => 'slug',
-          //       'terms' => $slug,
-          //       'operator' => 'IN',
-          //     )
-          //   )
-          // );
           $tax_query[] = array(
             'relation' => 'AND',
             array(

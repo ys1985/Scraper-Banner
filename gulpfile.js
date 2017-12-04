@@ -32,8 +32,8 @@ gulp.task('sass', function () {
         .pipe(sass(CONF.SASS.OPTION)).on('error', sass.logError)
         .pipe(autoprefixer())
         .pipe(sourcemaps.write(CONF.SASS.OUTPUT.MAP))
-        .pipe(gulp.dest('assets/css/'));
-        // .pipe(gulp.dest(CONF.SOURCE_ROOT + CONF.SASS.OUTPUT.DIR));
+        // .pipe(gulp.dest('assets/css/'));
+        .pipe(gulp.dest(CONF.SOURCE_ROOT + CONF.SASS.OUTPUT.DIR));
 });
 
 gulp.task('browsersync', function() {

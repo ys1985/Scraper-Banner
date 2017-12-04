@@ -23,7 +23,7 @@
         <header id="header">
       <h1><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><img src="<?php echo get_template_directory_uri() ?>/assets/images/logo.svg" alt=""></a></h1>
       <div class="search-input">
-      
+
       </div>
       <div class="result-num">
         <span>Banner Design Gallery  2,444件</span>

@@ -21,6 +21,15 @@
   h1{
     cursor: pointer;
     padding-left: 50px;
+    a{
+      display: block;
+      text-align: left;
+      img{
+        width: 150px;
+        vertical-align: middle;
+        height: 20px;
+      }
+    }
   }
 
   //--------------------------

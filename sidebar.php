@@ -2,11 +2,10 @@
   <div class="scroller">
     <h1><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"></a></h1>
     <?php
-      $terms = get_terms( 'brand-category' , array('hide_empty'=>false));
-      foreach ( $terms as $term ){
-      echo '<a href="'.get_term_link($term->slug, 'brand-category').'">'.$term->name.'</a>'; //タームのリンク
-      }
-
+      // $terms = get_terms( 'brand-category' , array('hide_empty'=>false));
+      // foreach ( $terms as $term ){
+      // echo '<a href="'.get_term_link($term->slug, 'brand-category').'">'.$term->name.'</a>'; //タームのリンク
+      // }
     ?>
     <?php
     if(is_tax('brand-category')) {
