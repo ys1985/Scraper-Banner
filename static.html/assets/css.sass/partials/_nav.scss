@@ -96,8 +96,14 @@
             background: #333;
             border:1px solid #666;
           }
+          &:hover:before{
+            background: #222;
+          }
           &:after{
-            content: "";
+            content: "\f00c";
+            font-family: FontAwesome;
+            line-height: 1em;
+            color: #333;
             display: block;
             position: absolute;
             top:50%;
