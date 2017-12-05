@@ -8,12 +8,12 @@
       // }
     ?>
     <?php
-    if(is_tax('brand-category')) {
-      echo get_query_var('term');
-    }
+    // if(is_tax('brand-category')) {
+    //   echo get_query_var('term');
+    // }
     ?>
     <?php
-    search_form_html();
+    search_form_sidenav();
     ?>
   </div>
 </nav>

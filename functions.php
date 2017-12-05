@@ -27,47 +27,11 @@ add_action('admin_menu', 'remove_menus');
 //========================================================================================
 //カスタムメニューの位置を定義する
 //========================================================================================
-register_nav_menus(array(
-    'category_menu' => '商材メニュー',
-    'color_menu' => 'カラーメニュー'
-));
-register_nav_menus(array($location => $description));
-
-//========================================================================================
-//ウィジェット設定 サイドバーを定義する
-//========================================================================================
-add_action( 'widgets_init', 'theme_slug_widgets_init' );
-function theme_slug_widgets_init() {
-  register_sidebar( array(
-  'name' => __( 'Main Sidebar', 'theme-slug' ),
-  'id' => 'sidebar-1',
-  'description' => __( 'Widgets in this area will be shown on all posts and pages.', 'theme-slug' ),
-  'before_widget' => '<div id="%1$s" class="category-list">',
-	'after_widget'  => '</div>',
-	'before_title'  => '<h2 class="category_ttl">',
-	'after_title'   => '</h2>',
-    ) );
-}
-
-//========================================================================================
-//カテゴリメニューに件数を表示
-//========================================================================================
-add_filter( 'wp_nav_menu_objects', 'article_count' );
-function article_count( $items ) {
-  foreach ( $items as $item ) {
-      if ( $term = get_term( $item->object_id, $item->object ) ) {
-          $item->title .= '<span class="menu_count">（'. $term->count .'）</span>';
-      }
-      $args[] = $item;
-  }
-  return $args;
-}
-
-function admin_categorybox_height(){
-	?><style>#category-all{max-height:9999px}</style><?php
-}
-add_action('admin_head','admin_categorybox_height');
-
+// register_nav_menus(array(
+//     'category_menu' => '商材メニュー',
+//     'color_menu' => 'カラーメニュー'
+// ));
+// register_nav_menus(array($location => $description));
 
 //========================================================================================
 //カテゴリメニュー 大カテゴリチェックボックス非表示
@@ -121,13 +85,13 @@ function create_post_type() {
   register_post_type(
    'brands',
    array(
-     'label' => '商材投稿',
+     'label' => 'バナー投稿',
      'public' => true,
      'has_archive' => true,
      'rewrite' => array( 'with_front' => false ),
      'menu_position' => 5,
-     'supports' => array( 'title', 'author', 'thumbnail', 'trackbacks', 'custom-fields', 'revisions' ),
-     'taxonomies' => array( 'genre' ),
+     'supports' => array( 'title', 'thumbnail'),
+     'taxonomies' => array( 'genre' )
    )
  );
 
@@ -190,79 +154,104 @@ function create_post_type() {
 //========================================================================================
 // 絞込用の検索機能追加
 //========================================================================================
+//ヘッダー検索窓用
+// function search_form_header() {
+//   global $wp_query, $query;
+//   if(is_tax('brand-category')) {
+//     $action = home_url( '/' ) . '/brands/brand-category/' . get_query_var('term');
+//   }
+//   else {
+//     $action = home_url( '/' );
+//   }
+//   $html = '<form method="post" id="searchform" action="' . $action . '">';
+//
+//   $html .= '<input class="search_all" type="text" name="s"  id="s" value="' . $wp_query->get('s') . '" placeholder="検索したいキーワードを入力してください">';
+//
+//   $html .= '</form>';
+//
+//   echo $html;  //作成したフォームを返す
+// }
+
 
 //タクソノミーとタームからフォームを作る関数（archive-rent.phpとかから呼び出す関数）
-function search_form_html() {
-global $wp_query, $query;
+function search_form_sidenav() {
+  global $wp_query, $query;
 
-
-if(is_tax('brand-category')) {
-  $action = home_url( '/' ) . '/brands/brand-category/' . get_query_var('term');
-}
-else {
-  $action = home_url( '/' );
-}
-
-$html = '<form method="post" id="searchform" action="' . $action . '">';
-$html .= '<input class="search_all" type="text" name="s"  id="s" value="' . $wp_query->get('s') . '" placeholder="検索したいキーワードを入力してください">';
-$taxonomies = get_taxonomies( array(  //全タクソノミーを配列で取得
-  'public'   => true,
-  '_builtin' => false
-) );
-
-foreach( $taxonomies as $key => $taxonomie ) {  //タクソノミー配列を回す
-  $html .= '<dl class="search_taxonomie"><dt>' . get_taxonomy($taxonomie)->labels->name . '</dt>';
-  $terms = get_terms( $taxonomie, 'hide_empty=0' );   //各タクソノミーのタームを取得
-  // if($key == 'color'){
-  //   $html .= '<dd><input class="color-tip" type="checkbox" name="' . $term->taxonomy . '[]" value="' . $term->slug . '">' . $term->name  . '</dd>';  //インプットを作成
-  // }
-  if ( ! empty( $terms ) && !is_wp_error( $terms ) ){
-    foreach ( $terms as $key => $term ) {
-      switch ($taxonomie) {
-        case 'color':
-          $html .= '<dd class="'. $term->slug . '"><input type="checkbox" id="' . $term->slug . '" name="' . $term->taxonomy . '[]" value="' . $term->slug . '"><label for="' . $term->slug . '" class="checkbox">' . $term->name  . '</label></dd>';
-            break;
-        default:
-        $html .= '<dd><input type="checkbox" id="' . $term->slug . '" name="' . $term->taxonomy . '[]" value="' . $term->slug . '"><label for="' . $term->slug . '" class="checkbox">' . $term->name  . '</label></dd>';
-          break;
-      }
-      // if($term->count > 0){ //各タームを回して
-      //   $html .= '<dd><input type="checkbox" name="' . $term->taxonomy . '[]" value="' . $term->slug . '">' . $term->name  . '</dd>';  //インプットを作成
-      // }
-    }
-    $html .= '</dl>';
+  if(is_tax('brand-category')) {
+    $action = home_url( '/' ) . '/brands/brand-category/' . get_query_var('term');
   }
-}
-$html .= '<input type="submit" class="searchsubmit" value="検索する">';
+  else {
+    $action = home_url( '/' );
+  }
+
+  $html = '<form method="post" id="searchform" action="' . $action . '">';
 
 
+  $taxonomies = get_taxonomies( array(  //全タクソノミーを配列で取得
+    'public'   => true,
+    '_builtin' => false
+  ) );
 
-$html .= '</form>';
+  foreach( $taxonomies as $key => $taxonomie ) {  //タクソノミー配列を回す
+    switch ($taxonomie) {
+      case 'color':
+        $html .= '<dl class="search_taxonomie color"><dt>' . get_taxonomy($taxonomie)->labels->name . '</dt>';
+        break;
+      default:
+        $html .= '<dl class="search_taxonomie"><dt>' . get_taxonomy($taxonomie)->labels->name . '</dt>';
+        break;
+    }
 
-echo $html;  //作成したフォームを返す
+    $terms = get_terms( $taxonomie, 'hide_empty=0' );   //各タクソノミーのタームを取得
+    if ( ! empty( $terms ) && !is_wp_error( $terms ) ){
+      foreach ( $terms as $key => $term ) {
+        switch ($taxonomie) {
+          case 'color':
+            $html .= '<dd class="'. $term->slug . '"><input type="checkbox" id="' . $term->slug . '" name="' . $term->taxonomy . '[]" value="' . $term->slug . '"><label for="' . $term->slug . '" class="checkbox">' . $term->name  . '</label></dd>';
+              break;
+          default:
+          $html .= '<dd><input type="checkbox" id="' . $term->slug . '" name="' . $term->taxonomy . '[]" value="' . $term->slug . '"><label for="' . $term->slug . '" class="checkbox">' . $term->name  . '</label></dd>';
+            break;
+        }
+        // if($term->count > 0){ //各タームを回して
+        //   $html .= '<dd><input type="checkbox" name="' . $term->taxonomy . '[]" value="' . $term->slug . '">' . $term->name  . '</dd>';  //インプットを作成
+        // }
+      }
+      $html .= '</dl>';
+    }
+  }
+  $html .= '<input type="submit" class="searchsubmit" value="検索する">';
+
+  $html .= '</form>';
+
+  echo $html;  //作成したフォームを返す
 }
 
 // カスタムクエリ追加
 function myQueryVars( $public_query_vars ) {
-$taxonomies = get_taxonomies( array(  //前回作ったタクソノミーを取得
-'public'   => true,
-'_builtin' => false
-) );
-foreach ( $taxonomies as $taxonomie ) {  //それを回す
-  $public_query_vars[] = $taxonomie;  //カスタムクエリを既存のクエリに追加
-}
-return $public_query_vars;
+  $taxonomies = get_taxonomies( array(  //前回作ったタクソノミーを取得
+  'public'   => true,
+  '_builtin' => false
+  ) );
+  foreach ( $taxonomies as $taxonomie ) {  //それを回す
+    $public_query_vars[] = $taxonomie;  //カスタムクエリを既存のクエリに追加
+  }
+  return $public_query_vars;
 }
 add_filter( 'query_vars', 'myQueryVars' );  //SQL が生成される前に、WordPress のパブリッククエリ変数のリストに対して適用される。
 
 
 //?brands=30000+over-135000&post_type=rent&key-money-deposit=30000+40000&s= の様なパラメーターを作る
 function myRequest( $vars ) {
+
 $taxonomies = get_taxonomies( array(  //タクソノミー配列取得
   'public'   => true,
   '_builtin' => false
 ) );
+
+
 foreach( $taxonomies as $taxonomie ) {  //タクソノミー配列回す
+
   $terms = get_terms( $taxonomie, 'hide_empty=0' );  //タームオブジェクト取得
   if ( ! empty( $terms ) && !is_wp_error( $terms ) ){
     foreach ( $terms as $key => $term ) {  //タームオブジェクト回す
@@ -275,6 +264,7 @@ foreach( $taxonomies as $taxonomie ) {  //タクソノミー配列回す
 if ( isset( $_POST['s'] ) && !empty( $vars ) ) {  //検索フォームから来ていて、クエリからじゃなかったら
   $url = home_url('/brands/') . "?";
   $gets = array();
+
   foreach( $vars as $key => $val ) {
     if ($key == 's') {
       $val = str_replace('&', '%26', $val);  //文字化けとかしないようにして
@@ -292,13 +282,17 @@ if ( isset( $_POST['s'] ) && !empty( $vars ) ) {  //検索フォームから来�
   wp_redirect( $url . implode( '&', $gets ) );  //?rent=over-30000+over-135000&s=みたいにして/rent/にリダイレクト
   exit;
 }
+
 return $vars;
 }
+
 add_filter( 'request', 'myRequest');  //追加クエリ変数・プライベートクエリ変数が追加された後に適用される。
-
-
 //パラメーターを元にtax_queryを作る
 function myFilter( $query ) {
+if (is_admin()) {
+  return $query;
+}
+
 global $wp_query;
 
 $query->set("post_type", "brands");
@@ -359,13 +353,7 @@ if ( $query->get( 'post_type' ) === 'brands') {
   $query->is_search = true;      //検索ページだよってことにする
 
 }
+
 return $query;
 }
 add_filter('pre_get_posts','myFilter');  //クエリを実行する前に呼び出し
-
-//カスタム投稿パーマリンク「/taxonomy/」削除
-// function my_custom_post_type_permalinks_set($termlink, $term, $taxonomy){
-//   var_dump($termlink, $term, $taxonomy);
-// 	return str_replace('/'.$taxonomy.'/', '/', $termlink);
-// }
-// add_filter('term_link', 'my_custom_post_type_permalinks_set',11,3);

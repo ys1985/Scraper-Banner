@@ -21,7 +21,7 @@
     <header id="header">
       <h1><a href="#"><img src="assets/images/bdg-logo.svg" alt=""></a></h1>
       <div class="search-input">
-        <input type="text" name="" placeholder="検索" value="">
+        <input class="search_all" type="text" name="s" id="s" value="" placeholder="検索したいキーワードを入力してください">
       </div>
 
       <div id="ico-menu">
@@ -92,8 +92,8 @@
     <div class="scroller" style="transition-timing-function: cubic-bezier(0.1, 0.57, 0.1, 1); transition-duration: 0ms; transform: translate(0px, 0px) translateZ(0px);">
     <h1><a href="http://localhost:8888/wordpress/" rel="home"></a></h1>
       <form method="post" id="searchform" action="http://localhost:8888/wordpress/">
-        <input type="submit" class="searchsubmit" value="検索する">
-        <!-- <input class="search_all" type="text" name="s" id="s" value="" placeholder="検索したいキーワードを入力してください"> -->
+
+
         <dl class="search_taxonomie">
           <dt>商材名</dt>
           <dd>
@@ -101,14 +101,14 @@
             <label for="checkbox1" class="checkbox">ConoHa</label>
           </dd>
           <dd><input type="checkbox" id="checkbox2" name="brand-category[]" value="z-com">
-            <label for="checkbox2" class="checkbox">z.com</label>
+            <label for="checkbox2" class="checkbox">GMOアプリクラウド</label>
           </dd>
           <dd>
             <input type="checkbox" id="checkbox3" name="brand-category[]" value="onamae">
             <label for="checkbox3" class="checkbox">お名前.com</label>
           </dd>
         </dl>
-          <dl class="search_taxonomie">
+          <dl class="search_taxonomie color">
             <dt>カラー</dt>
             <dd class="c1">
               <input type="checkbox" id="checkbox4" name="color[]" value="c1">
@@ -170,17 +170,12 @@
               <input type="checkbox" id="checkbox18" name="color[]" value="c15">
               <label for="checkbox18" class="checkbox">その他</label>
             </dd>
+          </dl>
 
-          </dl>
-          <dl class="search_taxonomie">
-            <dt>人物</dt>
-            <dd><input type="checkbox" name="person[]" value="preson">人物あり</dd>
-            <dd><input type="checkbox" name="person[]" value="no-person">人物なし</dd>
-          </dl>
-          <dl class="search_taxonomie">
-            <dt>サイズ</dt>
-            <dd><input type="checkbox" name="size[]" value="350-250">350x250</dd>
-          </dl>
+          <div class="searchsubmit">
+              <input type="submit" class="searchsubmit" value="検索する">
+          </div>
+
       </form>
       </div>
     </nav>

@@ -2,7 +2,6 @@
     $(function() {
 
         var BannerArchive = (function(){
-            var test;
             var $body = $('body');
             var device;
             var device_cheker;
@@ -23,7 +22,6 @@
 
               //masonry
               $bnrthumbList.imagesLoaded(function(){
-
                 $bnrthumbList.masonry({
                 // options
                 itemSelector: '.grid-item',
@@ -37,7 +35,6 @@
 
             var resizeBannerWidthMax = function(){
               $bnrthumbListImg.each(function(){
-                // console.log($(this).width());
                 if($(this).width() > $(this).parent().width()){
                   $(this).css({width:$(this).parent().width()})
                 }
@@ -133,20 +130,17 @@
               pageScroll($(window));
             }
 
+            //PC/SP responsiveTrigger
             $('body').on('resize:responsive',function(){
                 pagetopHandler();
                 resizeBannerWidthMax();
                 if(device === "PC"){
                   $contentsSlideWrap.addClass('active');
-                  // $bnrthumbList.masonry('reload');
                 }
                 else if(device === "SP"){
                   $contentsSlideWrap.removeClass('active');
-                  // $bnrthumbList.masonry('reload');
                 }
             });
-
-
 
             return{
               sidebarHandler : sidebarHandler,
