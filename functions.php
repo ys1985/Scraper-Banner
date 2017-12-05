@@ -176,7 +176,6 @@ function create_post_type() {
 //タクソノミーとタームからフォームを作る関数（archive-rent.phpとかから呼び出す関数）
 function search_form_sidenav() {
   global $wp_query, $query;
-
   //if(is_tax('brand-category')) {
   //  $action = home_url( '/' ) . '/brands/brand-category/' . get_query_var('term');
   //}
@@ -185,12 +184,15 @@ function search_form_sidenav() {
   //}
 
   $html = '<form method="post" id="searchform" action="' . $action . '">';
+  $html.= '<input type="hidden" name="s" value="">';
 
 
   $taxonomies = get_taxonomies( array(  //全タクソノミーを配列で取得
     'public'   => true,
     '_builtin' => false
   ) );
+
+
 
   foreach( $taxonomies as $key => $taxonomie ) {  //タクソノミー配列を回す
     // switch ($taxonomie) {
@@ -201,16 +203,30 @@ function search_form_sidenav() {
     //     $html .= '<dl class="search_taxonomie"><dt>' . get_taxonomy($taxonomie)->labels->name . '</dt>';
     //     break;
     // }
+    if($tax_getparams = filter_input(INPUT_GET, $taxonomie)) {
+      $tax_getparams = explode(' ', $tax_getparams);
+    }
+    else {
+      $tax_getparams = array();
+    }
+
     $html .= '<dl class="search_taxonomie"><dt>' . get_taxonomy($taxonomie)->labels->name . '</dt>';
     $terms = get_terms( $taxonomie, 'hide_empty=0' );   //各タクソノミーのタームを取得
     if ( ! empty( $terms ) && !is_wp_error( $terms ) ){
       foreach ( $terms as $key => $term ) {
+
+        if(in_array($term->slug, $tax_getparams)) {
+          $checked = "checked";
+        }
+        else {
+          $checked = "";
+        }
         switch ($taxonomie) {
           case 'color':
-            $html .= '<dd class="'. $term->slug . '"><input type="checkbox" id="' . $term->slug . '" name="' . $term->taxonomy . '[]" value="' . $term->slug . '"><label for="' . $term->slug . '" class="checkbox">' . $term->name  . '</label></dd>';
+            $html .= '<dd class="'. $term->slug . '"><input type="checkbox" id="' . $term->slug . '" name="' . $term->taxonomy . '[]" value="' . $term->slug  . '"' . ' ' . $checked . '><label for="' . $term->slug . '" class="checkbox">' . $term->name  . '</label></dd>';
               break;
           default:
-          $html .= '<dd><input type="checkbox" id="' . $term->slug . '" name="' . $term->taxonomy . '[]" value="' . $term->slug . '"><label for="' . $term->slug . '" class="checkbox">' . $term->name  . '</label></dd>';
+          $html .= '<dd><input type="checkbox" id="' . $term->slug . '" name="' . $term->taxonomy . '[]" value="' . $term->slug . '"' . ' ' . $checked . '><label for="' . $term->slug . '" class="checkbox">' . $term->name  . '</label></dd>';
             break;
         }
         // if($term->count > 0){ //各タームを回して
@@ -261,8 +277,9 @@ foreach( $taxonomies as $taxonomie ) {  //タクソノミー配列回す
     }
   }
 }
-if ( isset( $_POST['s'] ) && !empty( $vars ) ) {  //検索フォームから来ていて、クエリからじゃなかったら
-  $url = home_url('/brands/') . "?";
+// if ( isset( $_POST['s'] ) && !empty( $vars ) ) {  //検索フォームから来ていて、クエリからじゃなかったら
+if ( isset( $_POST['s'] ) && !empty( $vars ) ) {
+  $url = home_url('/') . "?";
   $gets = array();
 
   foreach( $vars as $key => $val ) {
@@ -297,14 +314,13 @@ global $wp_query;
 
 $query->set("post_type", "brands");
 
-// if ( !array_key_exists( 's', $query->query ) ) { //詳細ページの場合
-//   return $query;  //そのまま表示
-// } else {
+if ( !array_key_exists( 's', $query->query ) ) { //詳細ページの場合
+  return $query;  //そのまま表示
+} else {
   if ( $query->get('name') ) {  //違ったらnameをクエリから取り除く
     unset($wp_query->query['name']);
   }
-// }
-
+}
 
 if ( $query->get( 'post_type' ) === 'brands') {
   // if ( count( $wp_query->query ) === 1 ) return $query;
