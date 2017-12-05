@@ -177,12 +177,12 @@ function create_post_type() {
 function search_form_sidenav() {
   global $wp_query, $query;
 
-  if(is_tax('brand-category')) {
-    $action = home_url( '/' ) . '/brands/brand-category/' . get_query_var('term');
-  }
-  else {
+  //if(is_tax('brand-category')) {
+  //  $action = home_url( '/' ) . '/brands/brand-category/' . get_query_var('term');
+  //}
+  //else {
     $action = home_url( '/' );
-  }
+  //}
 
   $html = '<form method="post" id="searchform" action="' . $action . '">';
 
@@ -193,15 +193,15 @@ function search_form_sidenav() {
   ) );
 
   foreach( $taxonomies as $key => $taxonomie ) {  //タクソノミー配列を回す
-    switch ($taxonomie) {
-      case 'color':
-        $html .= '<dl class="search_taxonomie color"><dt>' . get_taxonomy($taxonomie)->labels->name . '</dt>';
-        break;
-      default:
-        $html .= '<dl class="search_taxonomie"><dt>' . get_taxonomy($taxonomie)->labels->name . '</dt>';
-        break;
-    }
-
+    // switch ($taxonomie) {
+    //   case 'color':
+    //     $html .= '<dl class="search_taxonomie color"><dt>' . get_taxonomy($taxonomie)->labels->name . '</dt>';
+    //     break;
+    //   default:
+    //     $html .= '<dl class="search_taxonomie"><dt>' . get_taxonomy($taxonomie)->labels->name . '</dt>';
+    //     break;
+    // }
+    $html .= '<dl class="search_taxonomie"><dt>' . get_taxonomy($taxonomie)->labels->name . '</dt>';
     $terms = get_terms( $taxonomie, 'hide_empty=0' );   //各タクソノミーのタームを取得
     if ( ! empty( $terms ) && !is_wp_error( $terms ) ){
       foreach ( $terms as $key => $term ) {
@@ -297,16 +297,17 @@ global $wp_query;
 
 $query->set("post_type", "brands");
 
-if ( !array_key_exists( 's', $query->query ) ) { //詳細ページの場合
-  return $query;  //そのまま表示
-} else {
+// if ( !array_key_exists( 's', $query->query ) ) { //詳細ページの場合
+//   return $query;  //そのまま表示
+// } else {
   if ( $query->get('name') ) {  //違ったらnameをクエリから取り除く
     unset($wp_query->query['name']);
   }
-}
+// }
+
 
 if ( $query->get( 'post_type' ) === 'brands') {
-  if ( count( $wp_query->query ) === 1 ) return $query;
+  // if ( count( $wp_query->query ) === 1 ) return $query;
   $args = $wp_query->query;
   $meta_query = array();
   $tax_query = array();
