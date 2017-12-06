@@ -25,6 +25,8 @@ var sass         = require("gulp-sass");
 var autoprefixer = require('gulp-autoprefixer');
 var browsersync  = require('browser-sync');
 var symlink      = require('gulp-sym');
+var vfs　　　　　　= require('vinyl-fs');
+var symlink      = require('gulp-symlink');
 
 gulp.task('sass', function () {
     gulp.src(CONF.SOURCE_ROOT + CONF.SASS.SOURCE.DIR + '/**/*.' + CONF.SASS.SOURCE.EXT)
@@ -47,12 +49,20 @@ gulp.task('watch', function() {
     gulp.watch(CONF.PUBLIC_ROOT + '/**/*.css'  , browsersync.reload);
 });
 
-// gulp.src('html/assets')
-//     .pipe(symlink('html.static/assets'))
+gulp.task('symlink-css', function () {
+  return vfs.src('static.html/assets/css/**/*.css', {followSymlinks: false})
+  .pipe(vfs.symlink('assets/css'));
+});
 
+gulp.task('symlink-js', function () {
+  return vfs.src('static.html/assets/js/**/*.js', {followSymlinks: false})
+  .pipe(vfs.symlink('assets/js'));
+});
 
 gulp.task('default', [
     'sass',
     'browsersync',
+    'symlink-css',
+    'symlink-js',
     'watch'
 ]);

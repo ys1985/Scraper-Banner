@@ -176,33 +176,26 @@ function create_post_type() {
 //タクソノミーとタームからフォームを作る関数（archive-rent.phpとかから呼び出す関数）
 function search_form_sidenav() {
   global $wp_query, $query;
-  //if(is_tax('brand-category')) {
-  //  $action = home_url( '/' ) . '/brands/brand-category/' . get_query_var('term');
-  //}
-  //else {
-    $action = home_url( '/' );
-  //}
+
+  $action = home_url( '/' );
 
   $html = '<form method="post" id="searchform" action="' . $action . '">';
   $html.= '<input type="hidden" name="s" value="">';
-
 
   $taxonomies = get_taxonomies( array(  //全タクソノミーを配列で取得
     'public'   => true,
     '_builtin' => false
   ) );
 
-
-
   foreach( $taxonomies as $key => $taxonomie ) {  //タクソノミー配列を回す
-    // switch ($taxonomie) {
-    //   case 'color':
-    //     $html .= '<dl class="search_taxonomie color"><dt>' . get_taxonomy($taxonomie)->labels->name . '</dt>';
-    //     break;
-    //   default:
-    //     $html .= '<dl class="search_taxonomie"><dt>' . get_taxonomy($taxonomie)->labels->name . '</dt>';
-    //     break;
-    // }
+    switch ($taxonomie) {
+      case 'color':
+        $html .= '<dl class="search_taxonomie color"><dt>' . get_taxonomy($taxonomie)->labels->name . '</dt>';
+        break;
+      default:
+        $html .= '<dl class="search_taxonomie"><dt>' . get_taxonomy($taxonomie)->labels->name . '</dt>';
+        break;
+    }
     if($tax_getparams = filter_input(INPUT_GET, $taxonomie)) {
       $tax_getparams = explode(' ', $tax_getparams);
     }
@@ -210,7 +203,6 @@ function search_form_sidenav() {
       $tax_getparams = array();
     }
 
-    $html .= '<dl class="search_taxonomie"><dt>' . get_taxonomy($taxonomie)->labels->name . '</dt>';
     $terms = get_terms( $taxonomie, 'hide_empty=0' );   //各タクソノミーのタームを取得
     if ( ! empty( $terms ) && !is_wp_error( $terms ) ){
       foreach ( $terms as $key => $term ) {
@@ -229,14 +221,11 @@ function search_form_sidenav() {
           $html .= '<dd><input type="checkbox" id="' . $term->slug . '" name="' . $term->taxonomy . '[]" value="' . $term->slug . '"' . ' ' . $checked . '><label for="' . $term->slug . '" class="checkbox">' . $term->name  . '</label></dd>';
             break;
         }
-        // if($term->count > 0){ //各タームを回して
-        //   $html .= '<dd><input type="checkbox" name="' . $term->taxonomy . '[]" value="' . $term->slug . '">' . $term->name  . '</dd>';  //インプットを作成
-        // }
       }
       $html .= '</dl>';
+      $html .= '<div class="clear"><div class="searchsubmit"><input type="submit" class="searchsubmit" value="OK"></div></div>';
     }
   }
-  $html .= '<input type="submit" class="searchsubmit" value="検索する">';
 
   $html .= '</form>';
 
