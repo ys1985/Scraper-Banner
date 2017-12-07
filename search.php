@@ -20,7 +20,7 @@
     			<div class="info">
     				<p class="author ft-bold"><?php echo get_the_author_meta( 'nickname' ); ?> </p>
     				<p class="reactions">
-    					<span class="comments"><i class="fa fa-commenting" aria-hidden="true"></i>0</span>
+    					<!-- <span class="comments"><i class="fa fa-commenting" aria-hidden="true"></i>0</span> -->
     					<span class="likes"><i class="fa fa-heart" aria-hidden="true"></i>0</span>
     				</p>
     			</div>
