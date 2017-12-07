@@ -7,9 +7,9 @@
 
 html {
     font-size: 62.5%;
-
 }
 body {
+
     font-size: 14px;
     font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN',  meiryo, sans-serif;
     color: #333;
@@ -60,6 +60,9 @@ input:focus{
 }
 
 @media only screen and (max-width:767px) {
+  #contents-slide-wrap{
+    padding-top: 50px;
+  }
   #contents-slide-wrap.active{
     margin-left: 0px;
   }
@@ -85,39 +88,34 @@ input:focus{
     }
 }
 
-/******************************************************/
-/* pagetop
-/******************************************************/
 
-.pagetop{
-  width: 40px;
-  height: 40px;
+
+/******************************************************/
+/* search no-result
+/******************************************************/
+#no-result{
+  width: 100%;
+  height: 80vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: fixed;
-  bottom: -40px;
-  right: 20px;
-  z-index: 20;
-  border-radius: 20px;
-  background: #444;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  &:after{
-    content: "";
-    display: block;
-    width: 10px;
-    height: 10px;
-    margin-top: 5px;
-    border-top: 2px solid #fff;
-    border-right: 2px solid #fff;
-    transform: rotate(-45deg);
+  .in{
+    text-align: center;
+    .illust{
+      width: 100px;
+    }
+    p{
+      display: block;
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+    .tit{
+      font-size: 32px;
+      .fa-search{
+        padding-right: 10px;
+        line-height: 32px;
+      }
+    }
   }
-  &:hover{
-    background: #666;
-  }
-}
-
-.pagetop.active{
-  bottom: 20px;
 }

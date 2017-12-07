@@ -1,6 +1,5 @@
 (function($) {
     $(function() {
-
         var BannerArchive = (function(){
             var CONF = {
               $header            : $('#header'),
@@ -50,7 +49,6 @@
               })
             }
 
-
             var responsiveHandler = function(){
               device = $('.responsive-reaction').css('visibility');
                 if(device === "visible"){
@@ -64,9 +62,11 @@
                     device_cheker = device;
                     $body.trigger('trigger:responsive');
                 }
+                return device;
             }
 
             var headerMenu = function(windowObj){
+              //PC ico-menu
               $pc_ico_menu.on('click',function(e){
                 e.stopPropagation();
                 $contentsSlideWrap.toggleClass('active');
@@ -85,6 +85,7 @@
                   }
                 }
               })
+              //SP ico-menu
               $sp_ico_menu.on('click',function(e){
                 e.stopPropagation();
                 $contentsSlideWrap.toggleClass('active');
@@ -103,7 +104,7 @@
               )
             }
 
-            var pagetopHandler = function(){
+            var headerScrollHandler = function(){
               var $pagetop = $('.pagetop');
               var $body = $('body');
 
@@ -115,38 +116,68 @@
               }
 
               var pageScroll = function(windowObj){
-                if(windowObj.scrollTop() > 50){
-                    $header.addClass('fixed');
-                }
-                if(windowObj.scrollTop() < 20){
-                    $header.removeClass('fixed');
-                }
-                  if(windowObj.scrollTop() > 100){
+
+                if(device === "PC"){
+                  if(windowObj.scrollTop() > 50){
+                      $header.addClass('fixed');
+                  }
+                  if(windowObj.scrollTop() < 20){
+                      $header.removeClass('fixed');
+                  }
+                  if(windowObj.scrollTop() > 50){
                       $pagetop.addClass('active');
                       $header.addClass('fixed_fix');
                   }
-                  if(windowObj.scrollTop() < 100){
+                  if(windowObj.scrollTop() < 50){
                       $pagetop.removeClass('active');
                       $header.removeClass('fixed_fix');
                   }
+                }
+                if(device === "SP"){
+                  if($('#wpadminbar').css("display") === "block"){
+                    if(windowObj.scrollTop() > 10){
+                      $header.css({top:"0px"});
+                      $sp_ico_menu.css({top:"0px"});
+                    }
+                    if(windowObj.scrollTop() < 20){
+                      $header.css({top:"46px"});
+                      $sp_ico_menu.css({top:"46px"});
+                    }
+                  }
+                  else{
+                    $header.css({top:"0px"});
+                    $sp_ico_menu.css({top:"0px"});
+                  }
+                }
+
+                return windowObj;
               }
 
               $(window).on('scroll',function(){
                   pageScroll($(this));
               })
               pagetopClick();
-              pageScroll($(window));
+              pageScroll($window);
 
+              return $window;
             }
 
             //PC/SP responsiveTrigger
             $('body').on('trigger:responsive',function(){
-                pagetopHandler();
+                headerScrollHandler();
                 resizeBannerWidthMax();
                 if(device === "PC"){
+                  $pc_ico_menu.show();
+                  $sp_ico_menu.hide();
                   $contentsSlideWrap.addClass('active');
+                  $header.css({top:"0px"});
                 }
                 else if(device === "SP"){
+                  if($('#wpadminbar').css("display") === "block" && $window.scrollTop() < $('#wpadminbar').height()){
+                      $sp_ico_menu.css({top:$('#wpadminbar').height()});
+                  }
+                  $sp_ico_menu.css({display:"flex"});
+                  $pc_ico_menu.hide();
                   $contentsSlideWrap.removeClass('active');
                   $sp_ico_menu.removeClass('active');
                 }
@@ -164,10 +195,15 @@
 
         // window load
         $(window).on('load',function(){
-            BannerArchive.headerMenu();
-            BannerArchive.sidebarHandler();
-            BannerArchive.resonsiveReactionInit();
-            BannerArchive.responsiveHandler();
+          // if($(window).width() > 768){
+          //   if(!BannerArchive.CONF.$contentsSlideWrap.hasClass('active')){
+          //     BannerArchive.CONF.$header.css({width:$(window).width() - 240})
+          //   }
+          // }
+          BannerArchive.headerMenu();
+          BannerArchive.sidebarHandler();
+          BannerArchive.resonsiveReactionInit();
+          BannerArchive.responsiveHandler();
         })
 
         // window resize

@@ -146,6 +146,7 @@
           border-radius: 15px;
         }
       }
+
       .balloon{
         position: absolute;
         display: block;
@@ -160,6 +161,8 @@
         padding: 0 6px;
         transform: translate(-50%);
         z-index: 1;
+        opacity: 0;
+        transition: opacity 0.2s ease;
         &:after{
           content: "";
           border-color: transparent transparent #2f3131 transparent;
@@ -173,6 +176,9 @@
           top: -6px;
           width: 0
         }
+      }
+      a:hover .balloon{
+        opacity: 1;
       }
     }
 
@@ -217,20 +223,24 @@
 /* sp_header
 /******************************************************/
 @media only screen and (max-width:920px){
-  #header{
-    // width:720px!important;
+  .search-input{
+    display: none;
   }
 }
 
-@media only screen and (max-width:920px){
+@media only screen and (max-width:768px){
   #header{
+    position: fixed;
+    z-index: 10;
     width:100%!important;
     .inner-r{
+      padding: 0px 20px 0px 0px;
       //--------------------------
       // search form
       //--------------------------
-      .search-input{
-        display: none;
+
+      .login{
+        padding-left: 0px;
       }
     }
   }

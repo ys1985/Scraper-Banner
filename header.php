@@ -2,7 +2,7 @@
 <html <?php language_attributes(); ?>>
 <head>
 <meta charset="UTF-8">
-<title><?php wp_title('|', true, 'right'); ?></title>
+<title>Scraper-BannerArchive</title>
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
@@ -19,20 +19,34 @@
 
 </head>
 <body <?php body_class(); ?>>
+
   <div id="contents-slide-wrap">
 
-        <header id="header">
-      <h1><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><img src="<?php echo get_template_directory_uri() ?>/assets/images/bdg-logo.svg" alt=""></a></h1>
-      <div class="search-input">
-
-      </div>
-      <div class="result-num">
-      </div>
-      <div id="ico-menu">
-        <div class="inner">
-          <span></span>
-          <span></span>
+    <header id="header">
+      <div class="inner-l">
+        <h1><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><img src="<?php echo get_template_directory_uri() ?>/assets/images/bdg-logo.svg" alt=""></a></h1>
+        <div id="ico-menu">
+          <div class="inner">
+            <span></span>
+            <span></span>
+          </div>
         </div>
+      </div>
+      <div class="inner-r">
+        <div class="search-input">
+          <form method="get" id="brandsSearch" action="<?php echo home_url('/'); ?>">
+            <input class="search_all" type="text" name="s" id="brandsSearch" value="<?php the_search_query(); ?>" placeholder="検索したいキーワードを入力してください" />
+            <input type="hidden" name="post_type" value="brands">
+          </form>
+        </div>
+        <div class="login">
+          <?php if (is_user_logged_in()) : ?>
+            <a href="<?php echo esc_url( home_url( '/wp-admin' ) ); ?>"><?php $user = wp_get_current_user(); echo get_avatar($user -> ID , 30 ?><span class="balloon">Dashboard</span></a>
+          <?php else :?>
+              <p><a href="<?php echo esc_url( home_url( '/wp-login.php' ) ); ?>">Login</p>
+          <?php endif;?>
+        </div>
+
       </div>
     </header>
     <!-- header  -->

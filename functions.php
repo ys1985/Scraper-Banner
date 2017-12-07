@@ -1,5 +1,6 @@
 <?php
 add_theme_support('post-thumbnails');
+
 // add_theme_support( 'menus' );
 
 //========================================================================================
@@ -110,19 +111,6 @@ function create_post_type() {
     )
   );
   register_taxonomy(
-    'color',
-    'brands',
-    array(
-      'hierarchical' => true, /* 親子関係が必要なければ false */
-      'update_count_callback' => '_update_post_term_count',
-      'label' => 'カラー',
-      'singular_label' => 'カラー',
-      'public' => true,
-      'show_ui' => true,
-      'rewrite' => array( 'slug' => 'color' )
-    )
-  );
-  register_taxonomy(
     'person',
     'brands',
     array(
@@ -133,6 +121,19 @@ function create_post_type() {
       'public' => true,
       'show_ui' => true,
       'rewrite' => array( 'slug' => 'person' )
+    )
+  );
+  register_taxonomy(
+    'color',
+    'brands',
+    array(
+      'hierarchical' => true, /* 親子関係が必要なければ false */
+      'update_count_callback' => '_update_post_term_count',
+      'label' => 'カラー',
+      'singular_label' => 'カラー',
+      'public' => true,
+      'show_ui' => true,
+      'rewrite' => array( 'slug' => 'color' )
     )
   );
   register_taxonomy(
@@ -154,24 +155,6 @@ function create_post_type() {
 //========================================================================================
 // 絞込用の検索機能追加
 //========================================================================================
-//ヘッダー検索窓用
-// function search_form_header() {
-//   global $wp_query, $query;
-//   if(is_tax('brand-category')) {
-//     $action = home_url( '/' ) . '/brands/brand-category/' . get_query_var('term');
-//   }
-//   else {
-//     $action = home_url( '/' );
-//   }
-//   $html = '<form method="post" id="searchform" action="' . $action . '">';
-//
-//   $html .= '<input class="search_all" type="text" name="s"  id="s" value="' . $wp_query->get('s') . '" placeholder="検索したいキーワードを入力してください">';
-//
-//   $html .= '</form>';
-//
-//   echo $html;  //作成したフォームを返す
-// }
-
 
 //タクソノミーとタームからフォームを作る関数（archive-rent.phpとかから呼び出す関数）
 function search_form_sidenav() {
