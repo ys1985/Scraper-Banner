@@ -41,7 +41,7 @@
         </div>
         <div class="login">
           <?php if (is_user_logged_in()) : ?>
-            <a href="<?php echo esc_url( home_url( '/wp-admin' ) ); ?>"><?php $user = wp_get_current_user(); echo get_avatar($user -> ID , 30 ?><span class="balloon">Dashboard</span></a>
+            <a href="<?php echo esc_url( home_url( '/wp-admin' ) ); ?>"><?php $user = wp_get_current_user(); echo get_avatar($user -> ID , 30) ?><span class="balloon">Dashboard</span></a>
           <?php else :?>
               <p><a href="<?php echo esc_url( home_url( '/wp-login.php' ) ); ?>">Login</p>
           <?php endif;?>

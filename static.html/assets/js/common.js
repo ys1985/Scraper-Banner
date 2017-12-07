@@ -195,11 +195,11 @@
 
         // window load
         $(window).on('load',function(){
-          // if($(window).width() > 768){
-          //   if(!BannerArchive.CONF.$contentsSlideWrap.hasClass('active')){
-          //     BannerArchive.CONF.$header.css({width:$(window).width() - 240})
-          //   }
-          // }
+          if($(window).width() > 768){
+            if(!BannerArchive.CONF.$contentsSlideWrap.hasClass('active')){
+              BannerArchive.CONF.$header.css({width:$(window).width() - 240})
+            }
+          }
           BannerArchive.headerMenu();
           BannerArchive.sidebarHandler();
           BannerArchive.resonsiveReactionInit();
