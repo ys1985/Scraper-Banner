@@ -8,15 +8,18 @@
 
             var device;
             var device_cheker;
-            var $body              = $('body');
-            var $contentsSlideWrap = $('#contents-slide-wrap');
-            var $window            = $(window);
-            var window_w           = $(window).innerWidth();
-            var $header            = $("#header");
-            var $bnrthumbList      = $('#bnrthumb-list');
-            var $bnrthumbListImg   = $('#bnrthumb-list .grid-item img');
-            var $pc_ico_menu      = $('#ico-menu');
-            var $sp_ico_menu      = $('#sp-ico-menu');
+            var $body                    = $('body');
+            var $contentsSlideWrap       = $('#contents-slide-wrap');
+            var $window                  = $(window);
+            var window_w                 = $(window).innerWidth();
+            var $header                  = $("#header");
+            var $bnrthumbList            = $('#bnrthumb-list');
+            var $bnrthumbListImg         = $('#bnrthumb-list .grid-item img');
+            var $pc_ico_menu             = $('#ico-menu');
+            var $sp_ico_menu             = $('#sp-ico-menu');
+
+            // var $categoryNavColorLabel   = $('#category-nav .search_taxonomie.color label.checkebox');
+            // var $categoryNavLabelBubble  = $('#category-nav .search_taxonomie.color label.checkebox span.color-tip');
 
             var resonsiveReactionInit = function(){
               $body.append('<div class="responsive-reaction"></div>');
@@ -29,7 +32,6 @@
 
               //masonry
               $bnrthumbList.imagesLoaded(function(){
-
                 $bnrthumbList.masonry({
                 // options
                 itemSelector: '.grid-item',
@@ -38,6 +40,7 @@
                 horizontalOrder: true
                 });
               })
+
               resizeBannerWidthMax();
             }
 
@@ -156,10 +159,12 @@
               $(window).on('scroll',function(){
                   pageScroll($(this));
               })
+
               pagetopClick();
               pageScroll($window);
 
               return $window;
+
             }
 
             //PC/SP responsiveTrigger
@@ -183,13 +188,28 @@
                 }
             });
 
+            var categoryNavColorHadler = function(){
+              var $categoryNavColorLabel = $('#category-nav dl.search_taxonomie.color dd label');
+              $categoryNavColorLabel.hover(
+                function(){
+                  $(this).next().show();
+                },
+                function(){
+                  $(this).next().hide();
+                }
+              );
+            }
+
+
+
             return{
               CONF:CONF,
               sidebarHandler : sidebarHandler,
               resonsiveReactionInit : resonsiveReactionInit,
               responsiveHandler : responsiveHandler ,
               headerMenu : headerMenu ,
-              resizeBannerWidthMax: resizeBannerWidthMax
+              resizeBannerWidthMax: resizeBannerWidthMax ,
+              categoryNavColorHadler: categoryNavColorHadler
             };
         })();
 
@@ -204,6 +224,7 @@
           BannerArchive.sidebarHandler();
           BannerArchive.resonsiveReactionInit();
           BannerArchive.responsiveHandler();
+          BannerArchive.categoryNavColorHadler();
         })
 
         // window resize

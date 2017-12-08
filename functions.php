@@ -25,14 +25,6 @@ function remove_menus () {
 }
 add_action('admin_menu', 'remove_menus');
 
-//========================================================================================
-//カスタムメニューの位置を定義する
-//========================================================================================
-// register_nav_menus(array(
-//     'category_menu' => '商材メニュー',
-//     'color_menu' => 'カラーメニュー'
-// ));
-// register_nav_menus(array($location => $description));
 
 //========================================================================================
 //カテゴリメニュー 大カテゴリチェックボックス非表示
@@ -78,8 +70,65 @@ add_action('admin_menu', 'remove_menus');
 // require_once locate_template('lib/widgets.php');     // サイドバー、ウィジェットの関数
 // require_once locate_template('lib/custom.php');      // その他カスタマイズの関数
 
+
 //========================================================================================
-// カスタム投稿タイプ 追加
+//画像貼り付け時の自動挿入タグを削除
+//========================================================================================
+add_filter( 'image_send_to_editor', 'remove_image_attribute', 10 );
+add_filter( 'post_thumbnail_html', 'remove_image_attribute', 10 );
+
+function remove_image_attribute( $html ){
+	$html = preg_replace( '/(width|height)="\d*"\s/', '', $html );
+	$html = preg_replace( '/class=[\'"]([^\'"]+)[\'"]/i', '', $html );
+	return $html;
+}
+
+//========================================================================================
+// 管理画面タクソノミー絞込検索用
+//========================================================================================
+add_action( 'restrict_manage_posts', 'add_post_taxonomy_restrict_filter' );
+function add_post_taxonomy_restrict_filter() {
+    global $post_type;
+    if ( 'brands' == $post_type ) {
+        ?>
+        <select name="brand-category">
+            <option value="">商材選択</option>
+            <?php
+            $terms = get_terms('brand-category');
+            foreach ($terms as $term) { ?>
+                <option value="<?php echo $term->slug; ?>"><?php echo $term->name; ?></option>
+            <?php } ?>
+        </select>
+        <select name="person">
+            <option value="">人物あり・なし</option>
+            <?php
+            $terms = get_terms('person');
+            foreach ($terms as $term) { ?>
+                <option value="<?php echo $term->slug; ?>"><?php echo $term->name; ?></option>
+            <?php } ?>
+        </select>
+        <select name="color">
+            <option value="">color</option>
+            <?php
+            $terms = get_terms('color');
+            foreach ($terms as $term) { ?>
+                <option value="<?php echo $term->slug; ?>"><?php echo $term->name; ?></option>
+            <?php } ?>
+        </select>
+        <select name="size">
+            <option value="">サイズ</option>
+            <?php
+            $terms = get_terms('size');
+            foreach ($terms as $term) { ?>
+                <option value="<?php echo $term->slug; ?>"><?php echo $term->name; ?></option>
+            <?php } ?>
+        </select>
+        <?php
+    }
+}
+
+//========================================================================================
+// カスタム投稿タイプ タクソノミー追加
 //========================================================================================
 add_action( 'init', 'create_post_type' );
 function create_post_type() {
@@ -103,8 +152,8 @@ function create_post_type() {
     array(
       'hierarchical' => true, /* 親子関係が必要なければ false */
       'update_count_callback' => '_update_post_term_count',
-      'label' => '商材名',
-      'singular_label' => '商材名',
+      'label' => '商材カテゴリ',
+      'singular_label' => '商材カテゴリ',
       'public' => true,
       'show_ui' => true,
       'rewrite' => array( 'slug' => 'brand-category' )
@@ -144,6 +193,19 @@ function create_post_type() {
       'update_count_callback' => '_update_post_term_count',
       'label' => 'サイズ',
       'singular_label' => 'サイズ',
+      'public' => true,
+      'show_ui' => true,
+      'rewrite' => array( 'slug' => 'size' )
+    )
+  );
+  register_taxonomy(
+    'tag',
+    'brands',
+    array(
+      'hierarchical' => true, /* 親子関係が必要なければ false */
+      'update_count_callback' => '_update_post_term_count',
+      'label' => 'タグ',
+      'singular_label' => 'タグ',
       'public' => true,
       'show_ui' => true,
       'rewrite' => array( 'slug' => 'size' )
@@ -198,7 +260,7 @@ function search_form_sidenav() {
         }
         switch ($taxonomie) {
           case 'color':
-            $html .= '<dd class="'. $term->slug . '"><input type="checkbox" id="' . $term->slug . '" name="' . $term->taxonomy . '[]" value="' . $term->slug  . '"' . ' ' . $checked . '><label for="' . $term->slug . '" class="checkbox">' . $term->name  . '</label></dd>';
+            $html .= '<dd class="'. $term->slug . '"><input type="checkbox" id="' . $term->slug . '" name="' . $term->taxonomy . '[]" value="' . $term->slug  . '"' . ' ' . $checked . '><label for="' . $term->slug . '" class="checkbox"><span class="color-tip"></span></label><span class="bubble">' . $term->name  . '</span></dd>';
               break;
           default:
           $html .= '<dd><input type="checkbox" id="' . $term->slug . '" name="' . $term->taxonomy . '[]" value="' . $term->slug . '"' . ' ' . $checked . '><label for="' . $term->slug . '" class="checkbox">' . $term->name  . '</label></dd>';
