@@ -294,14 +294,13 @@ add_filter( 'query_vars', 'myQueryVars' );  //SQL が生成される前に、Wor
 //?brands=30000+over-135000&post_type=rent&key-money-deposit=30000+40000&s= の様なパラメーターを作る
 function myRequest( $vars ) {
 
+
 $taxonomies = get_taxonomies( array(  //タクソノミー配列取得
   'public'   => true,
   '_builtin' => false
 ) );
 
-
 foreach( $taxonomies as $taxonomie ) {  //タクソノミー配列回す
-
   $terms = get_terms( $taxonomie, 'hide_empty=0' );  //タームオブジェクト取得
   if ( ! empty( $terms ) && !is_wp_error( $terms ) ){
     foreach ( $terms as $key => $term ) {  //タームオブジェクト回す
@@ -311,8 +310,17 @@ foreach( $taxonomies as $taxonomie ) {  //タクソノミー配列回す
     }
   }
 }
+
+
 // if ( isset( $_POST['s'] ) && !empty( $vars ) ) {  //検索フォームから来ていて、クエリからじゃなかったら
-if ( isset( $_POST['s'] ) && !empty( $vars ) ) {
+if ( isset( $_POST['s'] ) && !empty( $vars )) {
+  // if(in_array($vars["author_name"], $vars)){
+  //   $url = home_url('/') . $vars["author_name"] . "?";
+  // }
+  // else{
+  //   $url = home_url('/') . "?";
+  // }
+
   $url = home_url('/') . "?";
   $gets = array();
 
