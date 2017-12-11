@@ -51,17 +51,18 @@ input:focus{
 /* #contents-slide-wrap
 /******************************************************/
 #contents-slide-wrap{
-  margin-left: 0;
   transition: all .5s ease;
+  margin-left: 240px;
 }
 
 #contents-slide-wrap.active{
-  margin-left: 240px;
+  margin-left: 0px;
 }
 
 @media only screen and (max-width:767px) {
   #contents-slide-wrap{
     padding-top: 50px;
+    margin-left: 0px;
   }
   #contents-slide-wrap.active{
     margin-left: 0px;

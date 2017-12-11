@@ -50,7 +50,7 @@ gulp.task('watch', function() {
 });
 
 gulp.task('symlink-css', function () {
-  return vfs.src('static.html/assets/css/**/*.css', {followSymlinks: false})
+  return vfs.src('static.html/assets/css/**/*.{css,css.map}', {followSymlinks: false})
   .pipe(vfs.symlink('assets/css'));
 });
 

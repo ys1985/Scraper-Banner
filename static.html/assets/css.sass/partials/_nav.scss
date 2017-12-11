@@ -9,7 +9,7 @@
     width: 240px;
     height: 100%;
     position: fixed;
-    left:-240px;
+    left:0px;
     top:0;
     background: $theme-color;
     box-sizing: border-box;
@@ -293,15 +293,21 @@
 }
 
 #contents-slide-wrap.active #category-nav{
-  left:0px;
+  left:-240px;
 }
 
 /******************************************************/
 /* sp category-nav
 /******************************************************/
 @media only screen and (max-width:768px){
+  #contents-slide-wrap.active #category-nav{
+    left:240px;
+  }
   #sidenav-wrapper{
     width: 240px;
+    #category-nav{
+      margin-left: -240px;
+    }
     //--------------------------
     //sp-ico-menu
     //--------------------------
@@ -332,10 +338,6 @@
         background: #fff;
         opacity: 1;
         left: 0;
-        -webkit-transform: rotate(0deg);
-        -moz-transform: rotate(0deg);
-        -o-transform: rotate(0deg);
-        transform: rotate(0deg);
         -webkit-transition: .25s ease-in-out;
         -moz-transition: .25s ease-in-out;
         -o-transition: .25s ease-in-out;
@@ -343,10 +345,18 @@
       }
       span:nth-child(1) {
         top: 0px;
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
       }
 
       span:nth-child(2) {
         top: 10px;
+        -webkit-transform: rotate(-0deg);
+        -moz-transform: rotate(-0deg);
+        -o-transform: rotate(-0deg);
+        transform: rotate(-0deg);
       }
     }
   }

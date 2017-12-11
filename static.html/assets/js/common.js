@@ -77,10 +77,11 @@
                   var header_w = $header.width();
                   if(device === "PC"){
                     if($contentsSlideWrap.hasClass('active')){
-                      $header.css({width:header_w - 240})
+                      $header.css({width:"100%"});
                     }
                     else {
-                      $header.css({width:"100%"});
+                      $header.css({width:header_w - 240})
+                      // $header.css({width:"100%"});
                     }
                   }
                   else{
@@ -174,7 +175,7 @@
                 if(device === "PC"){
                   $pc_ico_menu.show();
                   $sp_ico_menu.hide();
-                  $contentsSlideWrap.addClass('active');
+                  // $contentsSlideWrap.addClass('active');
                   $header.css({top:"0px"});
                 }
                 else if(device === "SP"){
@@ -183,8 +184,8 @@
                   }
                   $sp_ico_menu.css({display:"flex"});
                   $pc_ico_menu.hide();
-                  $contentsSlideWrap.removeClass('active');
-                  $sp_ico_menu.removeClass('active');
+                  // $contentsSlideWrap.addClass('active');
+                  $sp_ico_menu.addClass('active');
                 }
             });
 
@@ -199,7 +200,6 @@
                 }
               );
             }
-
 
 
             return{
@@ -231,10 +231,10 @@
         $(window).on('resize',function(){
             if($(window).width() > 768){
               if(BannerArchive.CONF.$contentsSlideWrap.hasClass('active')){
-                BannerArchive.CONF.$header.css({width:$(window).width() - 240})
+                BannerArchive.CONF.$header.css({width:"100%"});
               }
               else{
-                BannerArchive.CONF.$header.css({width:"100%"});
+                BannerArchive.CONF.$header.css({width:$(window).width() - 240})
               }
             }
             if($(window).width() < 960){

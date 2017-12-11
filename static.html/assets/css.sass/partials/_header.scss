@@ -70,10 +70,6 @@
       background: #fff;
       opacity: 1;
       left: 0;
-      -webkit-transform: rotate(0deg);
-      -moz-transform: rotate(0deg);
-      -o-transform: rotate(0deg);
-      transform: rotate(0deg);
       -webkit-transition: .25s ease-in-out;
       -moz-transition: .25s ease-in-out;
       -o-transition: .25s ease-in-out;
@@ -85,11 +81,19 @@
     }
 
     #ico-menu span:nth-child(1) {
-      top: 0px;
+      top: 5px;
+      -webkit-transform: rotate(135deg);
+      -moz-transform: rotate(135deg);
+      -o-transform: rotate(135deg);
+      transform: rotate(135deg);
     }
 
     #ico-menu span:nth-child(2) {
-      top: 10px;
+      top: 5px;
+      -webkit-transform: rotate(-135deg);
+      -moz-transform: rotate(-135deg);
+      -o-transform: rotate(-135deg);
+      transform: rotate(-135deg);
     }
   }
   .inner-r{
@@ -203,19 +207,19 @@
 //--------------------------
 
 #contents-slide-wrap.active #header #ico-menu span:nth-child(1) {
-  top: 5px;
-  -webkit-transform: rotate(135deg);
-  -moz-transform: rotate(135deg);
-  -o-transform: rotate(135deg);
-  transform: rotate(135deg);
+  top: 0px;
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -o-transform: rotate(0deg);
+  transform: rotate(0deg);
 }
 
 #contents-slide-wrap.active #header #ico-menu span:nth-child(2) {
-  top: 5px;
-  -webkit-transform: rotate(-135deg);
-  -moz-transform: rotate(-135deg);
-  -o-transform: rotate(-135deg);
-  transform: rotate(-135deg);
+  top: 10px;
+  -webkit-transform: rotate(-0deg);
+  -moz-transform: rotate(-0deg);
+  -o-transform: rotate(-0deg);
+  transform: rotate(-0deg);
 }
 
 
@@ -233,6 +237,7 @@
     position: fixed;
     z-index: 10;
     width:100%!important;
+    top: 0px;
     .inner-r{
       padding: 0px 20px 0px 0px;
       //--------------------------
