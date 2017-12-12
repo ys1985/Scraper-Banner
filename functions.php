@@ -219,13 +219,26 @@ function create_post_type() {
 //========================================================================================
 
 //タクソノミーとタームからフォームを作る関数（archive-rent.phpとかから呼び出す関数）
-function search_form_sidenav() {
+function search_form_sidenav($location) {
   global $wp_query, $query;
 
-  $action = home_url( '/' );
+  // checked;
+  // var_dump($location);
+  if($location === "index" ){
+    $action = home_url( '/' );
+  }
+  else if($location === "author"){
+    function getParamVal($param) {
+      $val = (isset($_GET[$param]) && $_GET[$param] != '') ? $_GET[$param] : '';
+      $val = htmlspecialchars($val, ENT_QUOTES);
+      return $val;
+    }
+    $id = getParamVal("author");
+    $action = home_url( '/?author=' . $id );
+  }
 
-  $html = '<form method="post" id="searchform" action="' . $action . '">';
-  $html.= '<input type="hidden" name="s" value="">';
+  $html .= '<form method="post" id="searchform" action="' . $action . '">';
+  $html .= '<input type="hidden" name="s" value="">';
 
   $taxonomies = get_taxonomies( array(  //全タクソノミーを配列で取得
     'public'   => true,
@@ -274,7 +287,9 @@ function search_form_sidenav() {
 
   $html .= '</form>';
 
+
   echo $html;  //作成したフォームを返す
+
 }
 
 // カスタムクエリ追加
@@ -290,129 +305,125 @@ function myQueryVars( $public_query_vars ) {
 }
 add_filter( 'query_vars', 'myQueryVars' );  //SQL が生成される前に、WordPress のパブリッククエリ変数のリストに対して適用される。
 
-
 //?brands=30000+over-135000&post_type=rent&key-money-deposit=30000+40000&s= の様なパラメーターを作る
 function myRequest( $vars ) {
 
+  $taxonomies = get_taxonomies( array(  //タクソノミー配列取得
+    'public'   => true,
+    '_builtin' => false
+  ) );
 
-$taxonomies = get_taxonomies( array(  //タクソノミー配列取得
-  'public'   => true,
-  '_builtin' => false
-) );
+  foreach( $taxonomies as $taxonomie ) {  //タクソノミー配列回す
+    $terms = get_terms( $taxonomie, 'hide_empty=0' );  //タームオブジェクト取得
 
-foreach( $taxonomies as $taxonomie ) {  //タクソノミー配列回す
-  $terms = get_terms( $taxonomie, 'hide_empty=0' );  //タームオブジェクト取得
-  if ( ! empty( $terms ) && !is_wp_error( $terms ) ){
-    foreach ( $terms as $key => $term ) {  //タームオブジェクト回す
-      if ( !empty( $vars[$term->taxonomy] ) && is_array( $vars[$term->taxonomy] ) ) {  //クエリに選択したタクソノミーが含まれていたら
-        $vars[$term->taxonomy] = implode( '+', $vars[$term->taxonomy] );  //プラスで連結してクエリに入れる
+    if ( ! empty( $terms ) && !is_wp_error( $terms ) ){
+      foreach ( $terms as $key => $term ) {  //タームオブジェクト回す
+        if ( !empty( $vars[$term->taxonomy] ) && is_array( $vars[$term->taxonomy] ) ) {  //クエリに選択したタクソノミーが含まれていたら
+          $vars[$term->taxonomy] = implode( '+', $vars[$term->taxonomy] );  //プラスで連結してクエリに入れる
+        }
       }
     }
   }
-}
 
+  //通常絞込検索
+  if ( isset( $_POST['s'] ) && !empty( $vars )) { //検索フォームから来ていて、クエリからじゃなかったら
+    $url = home_url('/') . "?";
+    $gets = array();
 
-// if ( isset( $_POST['s'] ) && !empty( $vars ) ) {  //検索フォームから来ていて、クエリからじゃなかったら
-if ( isset( $_POST['s'] ) && !empty( $vars )) {
-  // if(in_array($vars["author_name"], $vars)){
-  //   $url = home_url('/') . $vars["author_name"] . "?";
-  // }
-  // else{
-  //   $url = home_url('/') . "?";
-  // }
+    foreach( $vars as $key => $val ) {
 
-  $url = home_url('/') . "?";
-  $gets = array();
-
-  foreach( $vars as $key => $val ) {
-    if ($key == 's') {
-      $val = str_replace('&', '%26', $val);  //文字化けとかしないようにして
-    }
-    if ( strlen( $val ) > 0 ) {
-      if ( mb_detect_encoding( $val ) !== 'ASCII' ) {  //しないようにして
-        $val = urlencode( $val );
+      if ($key == 's') {
+        $val = str_replace('&', '%26', $val);  //文字化けとかしないようにして
       }
-      $gets[] = "{$key}={$val}";
-    }
-  }
-  if ( empty( $vars['s'] ) ) {
-    $gets[] = "s=";
-  }
-  wp_redirect( $url . implode( '&', $gets ) );  //?rent=over-30000+over-135000&s=みたいにして/rent/にリダイレクト
-  exit;
-}
+      if ( strlen( $val ) > 0 ) {
+        if ( mb_detect_encoding( $val ) !== 'ASCII' ) {  //しないようにして
+          $val = urlencode( $val );
+        }
+        $gets[] = "{$key}={$val}";
+      }
 
-return $vars;
+    }
+    if ( empty( $vars['s'] ) ) {
+      $gets[] = "s=";
+    }
+
+    wp_redirect( $url . implode( '&', $gets ) );  //?brands=over-30000+over-135000&s=みたいにして/brands/にリダイレクト
+    exit;
+  }
+
+  return $vars;
 }
 
 add_filter( 'request', 'myRequest');  //追加クエリ変数・プライベートクエリ変数が追加された後に適用される。
+
 //パラメーターを元にtax_queryを作る
 function myFilter( $query ) {
-if (is_admin()) {
+  if (is_admin()) {
+    return $query;
+  }
+
+  global $wp_query;
+
+  $query->set("post_type", "brands");
+
+  if ( !array_key_exists( 's', $query->query ) ) { //詳細ページの場合
+    return $query;  //そのまま表示
+  } else {
+    if ( $query->get('name') ) {  //違ったらnameをクエリから取り除く
+      unset($wp_query->query['name']);
+    }
+  }
+
+  if ( $query->get( 'post_type' ) === 'brands') {
+    $args = $wp_query->query;
+    $meta_query = array();
+    $tax_query = array();
+
+    $taxonomies = get_taxonomies( array(
+      'public'   => true,
+      '_builtin' => false
+    ));
+
+    //tax_queryを作っていく
+    foreach( $taxonomies as $taxonomie ) {
+      $terms = get_terms( $taxonomie, 'hide_empty=0' );
+      if ( ! empty( $terms ) && !is_wp_error( $terms ) ){
+        foreach ( $terms as $key => $term ) {
+
+          if ( array_key_exists( $taxonomie, $wp_query->query ) ) {
+
+            $slug = $query->get('brands');
+
+            $slug = $query->get($taxonomie);
+            $slug = explode( '+', $slug );
+            $tax_query[] = array(
+              'relation' => 'AND',
+              array(
+                'taxonomy' => $taxonomie,
+                'field' => 'slug',
+                'terms' => $slug,
+                'operator' => 'IN',
+              )
+            );
+            unset($args[$taxonomie]);
+            break ;
+          }
+
+        }
+      }
+    }
+    //クエリを作りなおしたら
+    $args['meta_query'] = $meta_query;
+    $args['tax_query'] = $tax_query;
+
+    //古いの消して
+    $query->init();
+    $query->parse_query( $args );  //新しいクエリにする
+    $query->is_search = true;      //検索ページだよってことにする
+
+  }
+
   return $query;
 }
 
-global $wp_query;
-
-$query->set("post_type", "brands");
-
-if ( !array_key_exists( 's', $query->query ) ) { //詳細ページの場合
-  return $query;  //そのまま表示
-} else {
-  if ( $query->get('name') ) {  //違ったらnameをクエリから取り除く
-    unset($wp_query->query['name']);
-  }
-}
-
-if ( $query->get( 'post_type' ) === 'brands') {
-  // if ( count( $wp_query->query ) === 1 ) return $query;
-  $args = $wp_query->query;
-  $meta_query = array();
-  $tax_query = array();
-
-  $taxonomies = get_taxonomies( array(
-    'public'   => true,
-    '_builtin' => false
-  ));
-  //tax_queryを作っていく
-  foreach( $taxonomies as $taxonomie ) {
-    $terms = get_terms( $taxonomie, 'hide_empty=0' );
-    if ( ! empty( $terms ) && !is_wp_error( $terms ) ){
-      foreach ( $terms as $key => $term ) {
-
-        if ( array_key_exists( $taxonomie, $wp_query->query ) ) {
-
-          $slug = $query->get('brands');
-
-          $slug = $query->get($taxonomie);
-          $slug = explode( '+', $slug );
-          $tax_query[] = array(
-            'relation' => 'AND',
-            array(
-              'taxonomy' => $taxonomie,
-              'field' => 'slug',
-              'terms' => $slug,
-              'operator' => 'IN',
-            )
-          );
-          unset($args[$taxonomie]);
-          break ;
-        }
-
-      }
-    }
-  }
-  //クエリを作りなおしたら
-  $args['meta_query'] = $meta_query;
-  $args['tax_query'] = $tax_query;
-
-  //古いの消して
-  $query->init();
-  $query->parse_query( $args );  //新しいクエリにする
-  $query->is_search = true;      //検索ページだよってことにする
-
-}
-
-return $query;
-}
 add_filter('pre_get_posts','myFilter');  //クエリを実行する前に呼び出し

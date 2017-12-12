@@ -3,7 +3,7 @@
     <div class="scroller">
       <h1><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"></a></h1>
       <?php
-        search_form_sidenav("index");
+        search_form_sidenav("author");
       ?>
 
       <?php $users = get_users( array('orderby'=>ID,'order'=>ASC) ); ?>

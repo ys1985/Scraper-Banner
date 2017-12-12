@@ -26,7 +26,6 @@
     			</div>
     		</div>
       </div>
-
       <?php endforeach; ?>
       <?php else : //記事が無い場合 ?>
         <div id="no-result">
@@ -41,7 +40,7 @@
       wp_reset_postdata(); //クエリのリセット ?>
 </div>
 
-  <?php get_sidebar(); ?>
+  <?php require_once locate_template('sidebar_author.php', true); ?>
 
   </div>
   <!-- /contents-slide-wrap -->

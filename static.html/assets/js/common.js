@@ -31,7 +31,8 @@
               });
 
               //masonry
-              $bnrthumbList.imagesLoaded(function(){
+              $bnrthumbList.imagesLoaded(function(e){
+                // console.log( e );
                 $bnrthumbList.masonry({
                 // options
                 itemSelector: '.grid-item',
@@ -39,8 +40,12 @@
                 // percentPosition: true ,
                 horizontalOrder: true
                 });
-              })
 
+                $bnrthumbList.on( 'layoutComplete', function( event, items ) {
+                  console.log( items.length );
+                });
+              })
+              
               resizeBannerWidthMax();
             }
 
