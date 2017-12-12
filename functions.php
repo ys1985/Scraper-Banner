@@ -224,7 +224,9 @@ function search_form_sidenav() {
 
   $action = home_url( '/' );
 
-  $html .= '<form method="post" id="searchform" action="' . $action . '">';
+  $users = get_users( array('orderby'=>ID,'order'=>ASC) );
+
+  $html .= '<form method="post" name="author" id="searchform" action="' . $action . '">';
   $html .= '<input type="hidden" name="s" value="">';
   $html .= '<input type="hidden" name="author" value="">';
 
@@ -232,6 +234,7 @@ function search_form_sidenav() {
     'public'   => true,
     '_builtin' => false
   ) );
+
 
   foreach( $taxonomies as $key => $taxonomie ) {  //タクソノミー配列を回す
     switch ($taxonomie) {
@@ -271,18 +274,17 @@ function search_form_sidenav() {
       $html .= '</dl>';
       $html .= '<div class="clear"><div class="searchsubmit"><input type="submit" class="searchsubmit" value="OK"></div></div>';
     }
+    //投稿者リスト作成
 
   }
-
-  //投稿者リスト作成
-  $users = get_users( array('orderby'=>ID,'order'=>ASC) );
 
   foreach ($users as $key => $user) {
     $uid = $user->ID;
     $html .= '<div class="author-profile">';
+
     $html .= '<span class="author-thumbanil">' . get_avatar( $uid ,40 ) .' </span> ';
     // $html .= '<span class="author-link"><a href="' . get_bloginfo("url") . '/?author=' . $uid .'">'.$user->display_name.'</a></span> ';
-    $html .= '<span class="author-link"><a href="javascript:document.author.submit(); document.author.value="1" return false;">'.$user->display_name.'</a></span> ';
+    $html .= '<span class="author-link"><a data="'.$uid.'" href="javascript:document.author.submit();">'.$user->display_name.'</a></span> ';
     $html .= '</div>';
   }
 

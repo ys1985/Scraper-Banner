@@ -45,7 +45,7 @@
                   console.log( items.length );
                 });
               })
-              
+
               resizeBannerWidthMax();
             }
 
@@ -220,6 +220,12 @@
 
         // window load
         $(window).on('load',function(){
+
+          $('.author-link a').on("click" , function(){
+            var id = $(this).attr('data');
+            document.author.author.value = id;
+          });
+
           if($(window).width() > 768){
             if(!BannerArchive.CONF.$contentsSlideWrap.hasClass('active')){
               BannerArchive.CONF.$header.css({width:$(window).width() - 240})
