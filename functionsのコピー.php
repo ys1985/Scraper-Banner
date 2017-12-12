@@ -219,14 +219,26 @@ function create_post_type() {
 //========================================================================================
 
 //タクソノミーとタームからフォームを作る関数（archive-rent.phpとかから呼び出す関数）
-function search_form_sidenav() {
+function search_form_sidenav($location) {
   global $wp_query, $query;
 
-  $action = home_url( '/' );
+  // checked;
+  // var_dump($location);
+  if($location === "index" ){
+    $action = home_url( '/' );
+  }
+  else if($location === "author"){
+    function getParamVal($param) {
+      $val = (isset($_GET[$param]) && $_GET[$param] != '') ? $_GET[$param] : '';
+      $val = htmlspecialchars($val, ENT_QUOTES);
+      return $val;
+    }
+    $id = getParamVal("author");
+    $action = home_url( '/?author=' . $id );
+  }
 
   $html .= '<form method="post" id="searchform" action="' . $action . '">';
   $html .= '<input type="hidden" name="s" value="">';
-  $html .= '<input type="hidden" name="author" value="">';
 
   $taxonomies = get_taxonomies( array(  //全タクソノミーを配列で取得
     'public'   => true,
@@ -271,22 +283,10 @@ function search_form_sidenav() {
       $html .= '</dl>';
       $html .= '<div class="clear"><div class="searchsubmit"><input type="submit" class="searchsubmit" value="OK"></div></div>';
     }
-
-  }
-
-  //投稿者リスト作成
-  $users = get_users( array('orderby'=>ID,'order'=>ASC) );
-
-  foreach ($users as $key => $user) {
-    $uid = $user->ID;
-    $html .= '<div class="author-profile">';
-    $html .= '<span class="author-thumbanil">' . get_avatar( $uid ,40 ) .' </span> ';
-    // $html .= '<span class="author-link"><a href="' . get_bloginfo("url") . '/?author=' . $uid .'">'.$user->display_name.'</a></span> ';
-    $html .= '<span class="author-link"><a href="javascript:document.author.submit(); document.author.value="1" return false;">'.$user->display_name.'</a></span> ';
-    $html .= '</div>';
   }
 
   $html .= '</form>';
+
 
   echo $html;  //作成したフォームを返す
 
@@ -325,8 +325,8 @@ function myRequest( $vars ) {
     }
   }
 
+  //通常絞込検索
   if ( isset( $_POST['s'] ) && !empty( $vars )) { //検索フォームから来ていて、クエリからじゃなかったら
-
     $url = home_url('/') . "?";
     $gets = array();
 
