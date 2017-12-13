@@ -224,11 +224,10 @@ function search_form_sidenav() {
 
   $action = home_url( '/' );
 
-  $users = get_users( array('orderby'=>ID,'order'=>ASC) );
+
 
   $html .= '<form method="post" name="author" id="searchform" action="' . $action . '">';
   $html .= '<input type="hidden" name="s" value="">';
-  $html .= '<input type="hidden" name="author" value="">';
 
   $taxonomies = get_taxonomies( array(  //全タクソノミーを配列で取得
     'public'   => true,
@@ -247,6 +246,7 @@ function search_form_sidenav() {
     }
     if($tax_getparams = filter_input(INPUT_GET, $taxonomie)) {
       $tax_getparams = explode(' ', $tax_getparams);
+
     }
     else {
       $tax_getparams = array();
@@ -274,17 +274,34 @@ function search_form_sidenav() {
       $html .= '</dl>';
       $html .= '<div class="clear"><div class="searchsubmit"><input type="submit" class="searchsubmit" value="OK"></div></div>';
     }
-    //投稿者リスト作成
 
   }
 
+  //投稿者リスト作成
+  $users = get_users( array('orderby'=>ID,'order'=>ASC) );
+
+  if($user_getparams = filter_input(INPUT_GET, "author")) {
+    $user_getparams = explode(' ', $user_getparams);
+  }
+  else {
+    $user_getparams = array();
+  }
   foreach ($users as $key => $user) {
+    if(in_array((string) $user->ID, $user_getparams)) {
+      $checked = "checked";
+    }
+    else {
+      $checked = "";
+    }
+
     $uid = $user->ID;
     $html .= '<div class="author-profile">';
-
+    $html .= '<input type="checkbox" id="'.$uid.'" name="author[]" value="'.$uid.'"' . '' . $checked . '>';
+    $html .= '<label for="'.$uid.'" class="author_checkbox">';
     $html .= '<span class="author-thumbanil">' . get_avatar( $uid ,40 ) .' </span> ';
     // $html .= '<span class="author-link"><a href="' . get_bloginfo("url") . '/?author=' . $uid .'">'.$user->display_name.'</a></span> ';
-    $html .= '<span class="author-link"><a data="'.$uid.'" href="javascript:document.author.submit();">'.$user->display_name.'</a></span> ';
+    $html .= '<span class="author-link">'.$user->display_name.'</span> ';
+    $html .= '</label>';
     $html .= '</div>';
   }
 
@@ -300,14 +317,19 @@ function myQueryVars( $public_query_vars ) {
   'public'   => true,
   '_builtin' => false
   ) );
+
   foreach ( $taxonomies as $taxonomie ) {  //それを回す
     $public_query_vars[] = $taxonomie;  //カスタムクエリを既存のクエリに追加
   }
+
+  //投稿者用のクエリ
+  // $public_query_vars[] = "author";
+
   return $public_query_vars;
 }
 add_filter( 'query_vars', 'myQueryVars' );  //SQL が生成される前に、WordPress のパブリッククエリ変数のリストに対して適用される。
 
-//?brands=30000+over-135000&post_type=rent&key-money-deposit=30000+40000&s= の様なパラメーターを作る
+//?brand-category=onamae&person=no-person&color=c1&s= の様なパラメーターを作る
 function myRequest( $vars ) {
 
   $taxonomies = get_taxonomies( array(  //タクソノミー配列取得
@@ -318,12 +340,22 @@ function myRequest( $vars ) {
   foreach( $taxonomies as $taxonomie ) {  //タクソノミー配列回す
     $terms = get_terms( $taxonomie, 'hide_empty=0' );  //タームオブジェクト取得
 
+
     if ( ! empty( $terms ) && !is_wp_error( $terms ) ){
       foreach ( $terms as $key => $term ) {  //タームオブジェクト回す
         if ( !empty( $vars[$term->taxonomy] ) && is_array( $vars[$term->taxonomy] ) ) {  //クエリに選択したタクソノミーが含まれていたら
           $vars[$term->taxonomy] = implode( '+', $vars[$term->taxonomy] );  //プラスで連結してクエリに入れる
+
         }
       }
+    }
+  }
+
+  $users = get_users( array('orderby'=>ID,'order'=>ASC) );
+
+  foreach ($users as $user) {
+    if(!empty( $vars["author"] ) && is_array( $vars["author"] )){
+      $vars["author"] = implode( '+', $vars["author"] );
     }
   }
 
@@ -360,6 +392,7 @@ add_filter( 'request', 'myRequest');  //追加クエリ変数・プライベー�
 
 //パラメーターを元にtax_queryを作る
 function myFilter( $query ) {
+
   if (is_admin()) {
     return $query;
   }
@@ -414,6 +447,14 @@ function myFilter( $query ) {
         }
       }
     }
+
+    // $users = get_users( array('orderby'=>ID,'order'=>ASC) );
+    // if(! empty($users) && !is_wp_error($users)){
+    //   foreach ($users as $user) {
+    //
+    //   }
+    // }
+
     //クエリを作りなおしたら
     $args['meta_query'] = $meta_query;
     $args['tax_query'] = $tax_query;
