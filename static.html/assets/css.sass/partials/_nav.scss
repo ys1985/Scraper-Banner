@@ -88,6 +88,7 @@
           cursor: pointer;
           transition: background 0.2s ease;
           &:hover{
+            border: solid 1px #fff;
             background: $theme-hover-color;
           }
           &:before{
@@ -95,11 +96,11 @@
             display: block;
             position: absolute;
             top:50%;
-            margin-top: -8px;
-            left:15px;
-            width:14px;
-            height:14px;
-            border-radius: 4px;
+            margin-top: -10px;
+            left:8px;
+            width:18px;
+            height:18px;
+            border-radius: 11px;
             background: $theme-color;
             border:1px solid #7d7d7d;
           }
@@ -109,17 +110,18 @@
           &:after{
             content: "\f00c";
             font-family: FontAwesome;
-            line-height: 1em;
+            line-height: 18px;
             font-size: 14px;
+            text-align: center;
             color: #333;
             display: block;
             position: absolute;
             top:50%;
-            margin-top: -8px;
-            left:15px;
-            width:14px;
-            height:14px;
-            border-radius: 4px;
+            margin-top: -10px;
+            left:8px;
+            width:18px;
+            height:18px;
+            border-radius: 11px;
             background: #fff;
             border:1px solid #fff;
             opacity: 0;
@@ -128,6 +130,7 @@
         }
         input[type=checkbox]:checked + label.checkbox{
           background: $theme-hover-color;
+          border: solid 1px #fff;
         }
         input[type=checkbox]:checked + label.checkbox:after{
           opacity: 1;
@@ -174,7 +177,7 @@
            display: none;
           }
           &:hover{
-            background: $theme-hover-color;
+            background: none;
             border: 1px solid #fff;
           }
         }
@@ -208,8 +211,27 @@
           }
         }
         input[type=checkbox]:checked + label.checkbox{
-          background: $theme-hover-color;
+          background: none;
           border: 1px solid #fff;
+          span:after{
+            content: "\f00c";
+            display: block;
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin-top: -10px;
+            margin-left: -10px;
+            text-align: center;
+            font-family: FontAwesome;
+            line-height: 20px;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.7);
+            color: #333;
+            text-shadow: 0px 1px 0px rgba(255 , 255 , 255 ,1);
+            border-radius: 10px;
+          }
         }
       }
       dd.c1 label.checkbox .color-tip{ background: #fff;}

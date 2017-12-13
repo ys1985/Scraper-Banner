@@ -32,7 +32,6 @@
 
               //masonry
               $bnrthumbList.imagesLoaded(function(e){
-                // console.log( e );
                 $bnrthumbList.masonry({
                 // options
                 itemSelector: '.grid-item',
@@ -42,7 +41,7 @@
                 });
 
                 $bnrthumbList.on( 'layoutComplete', function( event, items ) {
-                  console.log( items.length );
+                  // console.log( items.length );
                 });
               })
 
@@ -189,7 +188,7 @@
                   }
                   $sp_ico_menu.css({display:"flex"});
                   $pc_ico_menu.hide();
-                  // $contentsSlideWrap.addClass('active');
+                  $contentsSlideWrap.removeClass('active');
                   $sp_ico_menu.addClass('active');
                 }
             });

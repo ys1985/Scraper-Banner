@@ -6,11 +6,11 @@
           'post_type' => 'brands'    //投稿タイプの指定
       );
       if( $posts ) : foreach( $posts as $post) : setup_postdata( $post ); ?>
-
+  
       <div class="grid-item">
         <a class="thumb_img" href="<?php echo get_the_permalink(); ?>">
-          <?php if ( has_post_thumbnail() ): // サムネイルを持っているときの処理 ?>
-          <?php the_post_thumbnail(); ?>
+          <?php if ( $image = get_field('thumb-img') ): // サムネイルを持っているときの処理 ?>
+          <img src="<?php echo $image ?>" alt="" title="" />
           <?php else: // サムネイルを持っていないときの処理 ?>
           <img src="<?php echo get_template_directory_uri(); ?>/images/no-img.png" alt="no image" title="no image" />
           <?php endif; ?>

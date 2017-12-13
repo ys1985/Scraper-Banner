@@ -10,8 +10,8 @@ function remove_menus () {
     unset($menu[5]);  // 投稿
     unset($menu[10]); // メディア
     // unset($menu[15]); // リンク
-    // unset($menu[20]); // ページ
-    // unset($menu[25]); // コメント
+    unset($menu[20]); // ページ
+    unset($menu[25]); // コメント
     // unset($menu[59]); // メニューの線2
     // unset($menu[60]); // テーマ
     // unset($menu[65]); // プラグイン
@@ -23,8 +23,60 @@ function remove_menus () {
 }
 add_action('admin_menu', 'remove_menus');
 
+//========================================================================================
+//* カスタムフィールドを検索対象に含めます。(「-キーワード」のようなNOT検索にも対応します)
+//========================================================================================
+function posts_search_custom_fields( $orig_search, $query ) {
+	if ( $query->is_search() && $query->is_main_query() && ! is_admin() ) {
+		// 4.4のWP_Query::parse_search()の処理を流用しています。(検索語の分割処理などはすでにquery_vars上にセット済のため省きます)
+		global $wpdb;
+		$q = $query->query_vars;
+		$n = ! empty( $q['exact'] ) ? '' : '%';
+		$searchand = '';
 
-
+		foreach ( $q['search_terms'] as $term ) {
+			$include = '-' !== substr( $term, 0, 1 );
+			if ( $include ) {
+				$like_op  = 'LIKE';
+				$andor_op = 'OR';
+			} else {
+				$like_op  = 'NOT LIKE';
+				$andor_op = 'AND';
+				$term     = substr( $term, 1 );
+			}
+			$like = $n . $wpdb->esc_like( $term ) . $n;
+			// カスタムフィールド用の検索条件を追加します。
+			$search .= $wpdb->prepare( "{$searchand}(($wpdb->posts.post_title $like_op %s) $andor_op ($wpdb->posts.post_content $like_op %s) $andor_op (custom.meta_value $like_op %s))", $like, $like, $like );
+			$searchand = ' AND ';
+		}
+		if ( ! empty( $search ) ) {
+			$search = " AND ({$search}) ";
+			if ( ! is_user_logged_in() )
+				$search .= " AND ($wpdb->posts.post_password = '') ";
+		}
+		return $search;
+	}
+	else {
+		return $orig_search;
+	}
+}
+add_filter( 'posts_search', 'posts_search_custom_fields', 10, 2 );
+/**
+ * カスタムフィールド検索用のJOINを行います。
+ */
+function posts_join_custom_fields( $join, $query ) {
+	if ( $query->is_search() && $query->is_main_query() && ! is_admin() ) {
+		// group_concat()したmeta_valueをJOINすることでレコードの重複を除きつつ検索しやすくします。
+		global $wpdb;
+		$join .= " INNER JOIN ( ";
+		$join .= " SELECT post_id, group_concat( meta_value separator ' ') AS meta_value FROM $wpdb->postmeta ";
+		// $join .= " WHERE meta_key IN ( 'test' ) ";
+		$join .= " GROUP BY post_id ";
+		$join .= " ) AS custom ON ($wpdb->posts.ID = custom.post_id) ";
+	}
+	return $join;
+}
+add_filter( 'posts_join', 'posts_join_custom_fields', 10, 2 );
 
 //========================================================================================
 //カテゴリメニュー 大カテゴリチェックボックス非表示
@@ -160,19 +212,6 @@ function create_post_type() {
     )
   );
   register_taxonomy(
-    'person',
-    'brands',
-    array(
-      'hierarchical' => true, /* 親子関係が必要なければ false */
-      'update_count_callback' => '_update_post_term_count',
-      'label' => '人物',
-      'singular_label' => '人物',
-      'public' => true,
-      'show_ui' => true,
-      'rewrite' => array( 'slug' => 'person' )
-    )
-  );
-  register_taxonomy(
     'color',
     'brands',
     array(
@@ -185,6 +224,20 @@ function create_post_type() {
       'rewrite' => array( 'slug' => 'color' )
     )
   );
+  register_taxonomy(
+    'person',
+    'brands',
+    array(
+      'hierarchical' => true, /* 親子関係が必要なければ false */
+      'update_count_callback' => '_update_post_term_count',
+      'label' => '人物',
+      'singular_label' => '人物',
+      'public' => true,
+      'show_ui' => true,
+      'rewrite' => array( 'slug' => 'person' )
+    )
+  );
+
   register_taxonomy(
     'size',
     'brands',
@@ -219,9 +272,23 @@ function create_post_type() {
 //========================================================================================
 
 //*
-//タクソノミーとタームからフォームを作る関数（archive-rent.phpとかから呼び出す関数）
+//タクソノミーとタームからフォームを作る関数
 //*
 function search_form_sidenav() {
+
+  //*
+  //投稿者リスト作成
+  //*
+  $users = get_users( array('orderby'=>ID,'order'=>ASC) );
+  foreach ($users as $key => $user) {
+    $uid = $user->ID;
+    $html .= '<div class="author-profile">';
+    $html .= '<span class="author-thumbanil">' . get_avatar( $uid ,40 ) .' </span> ';
+    $html .= '<span class="author-link"><a href="' . get_bloginfo("url") . "/author/" . $user->user_nicename .'">'.$user->display_name.'</a></span> ';
+    $html .= '</label>';
+    $html .= '</div>';
+  }
+
   global $wp_query, $query;
 
   $urlArray = explode('/', wp_redirect_url_swithc($url));
@@ -235,6 +302,8 @@ function search_form_sidenav() {
 
   $html .= '<form method="post" id="searchform" action="' . $action . '">';
   $html .= '<input type="hidden" name="s" value="">';
+
+
 
   $taxonomies = get_taxonomies( array(  //全タクソノミーを配列で取得
     'public'   => true,
@@ -282,34 +351,6 @@ function search_form_sidenav() {
       $html .= '<div class="clear"><div class="searchsubmit"><input type="submit" class="searchsubmit" value="OK"></div></div>';
     }
 
-  }
-  //*
-  //投稿者リスト作成
-  //*
-  $users = get_users( array('orderby'=>ID,'order'=>ASC) );
-
-  if($user_getparams = filter_input(INPUT_GET, "author")) {
-    $user_getparams = explode(' ', $user_getparams);
-  }
-  else {
-    $user_getparams = array();
-  }
-  foreach ($users as $key => $user) {
-    if(in_array((string) $user->ID, $user_getparams)) {
-      $checked = "checked";
-    }
-    else {
-      $checked = "";
-    }
-
-    $uid = $user->ID;
-
-    $html .= '<div class="author-profile">';
-    $html .= '<span class="author-link"><a href="' . get_bloginfo("url") . "/author/" . $user->user_nicename .'">'.$user->display_name.'</a></span> ';
-    $html .= '<span class="author-thumbanil">' . get_avatar( $uid ,40 ) .' </span> ';
-    $html .= '<span class="author-link">'.$user->display_name.'</span> ';
-    $html .= '</label>';
-    $html .= '</div>';
   }
 
   $html .= '</form>';
@@ -405,7 +446,7 @@ function wp_redirect_url_swithc($url){
   $url = strtok($url, '?');
   return $url;
 }
-add_action('get_header','test');
+add_action('wp','wp_redirect_url_swithc');
 //*
 //パラメーターを元にtax_queryを作る
 //*
