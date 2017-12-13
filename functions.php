@@ -1,7 +1,4 @@
 <?php
-add_theme_support('post-thumbnails');
-
-// add_theme_support( 'menus' );
 
 //========================================================================================
 //管理画面左メニュー 表示設定
@@ -22,8 +19,11 @@ function remove_menus () {
     // unset($menu[75]); // ツール
     // unset($menu[80]); // 設定
     // unset($menu[90]); // メニューの線3
+
 }
 add_action('admin_menu', 'remove_menus');
+
+
 
 
 //========================================================================================
@@ -218,15 +218,22 @@ function create_post_type() {
 // 絞込用の検索機能追加
 //========================================================================================
 
+//*
 //タクソノミーとタームからフォームを作る関数（archive-rent.phpとかから呼び出す関数）
+//*
 function search_form_sidenav() {
   global $wp_query, $query;
 
-  $action = home_url( '/' );
+  $urlArray = explode('/', wp_redirect_url_swithc($url));
 
+  if(!in_array('author',$urlArray )){
+    $action = home_url( '/' );
+  }
+  else {
+    $action = wp_redirect_url_swithc($url);
+  }
 
-
-  $html .= '<form method="post" name="author" id="searchform" action="' . $action . '">';
+  $html .= '<form method="post" id="searchform" action="' . $action . '">';
   $html .= '<input type="hidden" name="s" value="">';
 
   $taxonomies = get_taxonomies( array(  //全タクソノミーを配列で取得
@@ -276,8 +283,9 @@ function search_form_sidenav() {
     }
 
   }
-
+  //*
   //投稿者リスト作成
+  //*
   $users = get_users( array('orderby'=>ID,'order'=>ASC) );
 
   if($user_getparams = filter_input(INPUT_GET, "author")) {
@@ -295,11 +303,10 @@ function search_form_sidenav() {
     }
 
     $uid = $user->ID;
+
     $html .= '<div class="author-profile">';
-    $html .= '<input type="checkbox" id="'.$uid.'" name="author[]" value="'.$uid.'"' . '' . $checked . '>';
-    $html .= '<label for="'.$uid.'" class="author_checkbox">';
+    $html .= '<span class="author-link"><a href="' . get_bloginfo("url") . "/author/" . $user->user_nicename .'">'.$user->display_name.'</a></span> ';
     $html .= '<span class="author-thumbanil">' . get_avatar( $uid ,40 ) .' </span> ';
-    // $html .= '<span class="author-link"><a href="' . get_bloginfo("url") . '/?author=' . $uid .'">'.$user->display_name.'</a></span> ';
     $html .= '<span class="author-link">'.$user->display_name.'</span> ';
     $html .= '</label>';
     $html .= '</div>';
@@ -311,7 +318,9 @@ function search_form_sidenav() {
 
 }
 
+//*
 // カスタムクエリ追加
+//*
 function myQueryVars( $public_query_vars ) {
   $taxonomies = get_taxonomies( array(  //前回作ったタクソノミーを取得
   'public'   => true,
@@ -322,14 +331,13 @@ function myQueryVars( $public_query_vars ) {
     $public_query_vars[] = $taxonomie;  //カスタムクエリを既存のクエリに追加
   }
 
-  //投稿者用のクエリ
-  // $public_query_vars[] = "author";
-
   return $public_query_vars;
 }
 add_filter( 'query_vars', 'myQueryVars' );  //SQL が生成される前に、WordPress のパブリッククエリ変数のリストに対して適用される。
 
+//*
 //?brand-category=onamae&person=no-person&color=c1&s= の様なパラメーターを作る
+//*
 function myRequest( $vars ) {
 
   $taxonomies = get_taxonomies( array(  //タクソノミー配列取得
@@ -350,20 +358,22 @@ function myRequest( $vars ) {
       }
     }
   }
-
-  $users = get_users( array('orderby'=>ID,'order'=>ASC) );
-
-  foreach ($users as $user) {
-    if(!empty( $vars["author"] ) && is_array( $vars["author"] )){
-      $vars["author"] = implode( '+', $vars["author"] );
-    }
-  }
+  //*
+  //投稿者用のパラメーター足す
+  //*
+  // $users = get_users( array('orderby'=>ID,'order'=>ASC) );
+  // foreach ($users as $user) {
+  //   if(!empty( $vars["author"] ) && is_array( $vars["author"] )){
+  //     $vars["author"] = implode( '+', $vars["author"] );
+  //   }
+  // }
 
   if ( isset( $_POST['s'] ) && !empty( $vars )) { //検索フォームから来ていて、クエリからじゃなかったら
 
-    $url = home_url('/') . "?";
     $gets = array();
 
+    // $url = home_url('/') . "?";
+    $url = wp_redirect_url_swithc($url) . "?";
     foreach( $vars as $key => $val ) {
 
       if ($key == 's') {
@@ -387,16 +397,23 @@ function myRequest( $vars ) {
 
   return $vars;
 }
+add_filter( 'request', 'myRequest');   //追加クエリ変数・プライベートクエリ変数が追加された後に適用される。
 
-add_filter( 'request', 'myRequest');  //追加クエリ変数・プライベートクエリ変数が追加された後に適用される。
-
+function wp_redirect_url_swithc($url){
+  $http = is_ssl() ? 'https' : 'http' . '://';
+  $url = $http . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+  $url = strtok($url, '?');
+  return $url;
+}
+add_action('get_header','test');
+//*
 //パラメーターを元にtax_queryを作る
+//*
 function myFilter( $query ) {
 
   if (is_admin()) {
     return $query;
   }
-
   global $wp_query;
 
   $query->set("post_type", "brands");
@@ -419,7 +436,9 @@ function myFilter( $query ) {
       '_builtin' => false
     ));
 
+    //*
     //tax_queryを作っていく
+    //*
     foreach( $taxonomies as $taxonomie ) {
       $terms = get_terms( $taxonomie, 'hide_empty=0' );
       if ( ! empty( $terms ) && !is_wp_error( $terms ) ){
@@ -447,13 +466,6 @@ function myFilter( $query ) {
         }
       }
     }
-
-    // $users = get_users( array('orderby'=>ID,'order'=>ASC) );
-    // if(! empty($users) && !is_wp_error($users)){
-    //   foreach ($users as $user) {
-    //
-    //   }
-    // }
 
     //クエリを作りなおしたら
     $args['meta_query'] = $meta_query;
