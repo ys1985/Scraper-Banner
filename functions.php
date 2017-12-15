@@ -154,6 +154,8 @@ add_action( 'restrict_manage_posts', 'add_post_taxonomy_restrict_filter' );
 //========================================================================================
 
 function create_post_type() {
+
+  //通常バナー投稿
   register_post_type(
    'brands',
    array(
@@ -166,7 +168,6 @@ function create_post_type() {
      'taxonomies' => array( 'genre' )
    )
  );
-
 
   register_taxonomy(
     'brand-category',
@@ -181,6 +182,7 @@ function create_post_type() {
       'rewrite' => array( 'slug' => 'brand-category' )
     )
   );
+
   register_taxonomy(
     'color',
     'brands',
@@ -235,8 +237,95 @@ function create_post_type() {
     )
   );
 
+  //20分バナーカスタム投稿タイプ
+  register_post_type(
+   'creative-bnr',
+   array(
+     'label' => '20分バナー投稿',
+     'public' => true,
+     'has_archive' => true,
+     'rewrite' => array( 'with_front' => false ),
+     'menu_position' => 5,
+     'supports' => array( 'title', 'thumbnail'),
+     'taxonomies' => array( 'genre' )
+   )
+ );
+
 }
 add_action( 'init', 'create_post_type' );
+
+//========================================================================================
+// 検索中表示機能
+//========================================================================================
+
+
+// （タクソノミーと）タームのリンクを取得する
+function custom_taxonomies_terms_links(){
+  // 投稿 ID から投稿オブジェクトを取得
+  $post = get_post( $post->ID );
+
+  // その投稿から投稿タイプを取得
+  $post_type = $post->post_type;
+
+  // その投稿タイプからタクソノミーを取得
+  $taxonomies = get_object_taxonomies( $post_type, 'objects' );
+
+  $all_taxonomies = get_taxonomies( array(
+    'public'   => true,
+    '_builtin' => false
+  ) );
+
+  //全タクソノミーをINPUT_GETで取得
+  foreach ($all_taxonomies as $all_taxonomie) {
+    $all_taxonomie_Array = explode(' ' , filter_input(INPUT_GET, $all_taxonomie));
+    $relust_tax_getparams[] = $all_taxonomie_Array;
+  }
+
+  //絞込検索された投稿のタクソノミーだけ表示
+  foreach ( $taxonomies as $taxonomy_slug => $taxonomy ){
+    // 投稿に付けられたタームを取得
+    $terms = get_the_terms( $post->ID, $taxonomy_slug );
+
+    if ( !empty( $terms ) ) {
+      foreach ( $terms as $term ) {
+        if(in_array($term->slug , $relust_tax_getparams)) {
+          var_dump($term->slug);
+        }
+        else {
+
+        }
+      }
+    }
+  }
+
+}
+
+function search_current_tag(){
+  $taxonomies = get_taxonomies( array(
+    'public'   => true,
+    '_builtin' => false
+  ) );
+  $terms = get_terms( $taxonomie, 'hide_empty=0' );
+
+  $html .= '<ul id="search_current_tag">';
+  foreach( $taxonomies as $key => $taxonomie ) {
+    if($tax_getparams = filter_input(INPUT_GET, $taxonomie)) {
+      $tax_getparams = explode(' ', $tax_getparams);
+    }
+    else {
+      $tax_getparams = array();
+    }
+    if ( ! empty( $terms ) && !is_wp_error( $terms ) ){
+      foreach ( $terms as $key => $term ) {
+        if(in_array($term->slug, $tax_getparams)) {
+          $html .= '<li>'.$term->name.'</li>';
+        }
+      }
+    }
+  }
+  $html .= '</ul>';
+  echo $html;
+}
 
 //========================================================================================
 // 絞込用の検索機能追加
@@ -251,11 +340,12 @@ function search_form_sidenav() {
 
   $urlArray = explode('/', wp_redirect_url_swithc($url));
 
-  if(!in_array('author',$urlArray )){
-    $action = home_url( '/' );
+  //投稿者ページだったら
+  if(in_array('author',$urlArray )){
+    $action = wp_redirect_url_swithc($url);
   }
   else {
-    $action = wp_redirect_url_swithc($url);
+    $action = home_url( '/' );
   }
 
   $html .= '<form method="post" id="searchform" action="' . $action . '">';
@@ -266,7 +356,6 @@ function search_form_sidenav() {
     'public'   => true,
     '_builtin' => false
   ) );
-
 
   foreach( $taxonomies as $key => $taxonomie ) {  //タクソノミー配列を回す
     switch ($taxonomie) {
@@ -279,7 +368,6 @@ function search_form_sidenav() {
     }
     if($tax_getparams = filter_input(INPUT_GET, $taxonomie)) {
       $tax_getparams = explode(' ', $tax_getparams);
-
     }
     else {
       $tax_getparams = array();
@@ -370,7 +458,6 @@ function myRequest( $vars ) {
 
     $gets = array();
 
-    // $url = home_url('/') . "?";
     $url = wp_redirect_url_swithc($url) . "?";
     foreach( $vars as $key => $val ) {
 

@@ -25,7 +25,7 @@
     <header id="header">
       <div class="inner-l">
         <h1><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><img src="<?php echo get_template_directory_uri() ?>/assets/images/bdg-logo.svg" alt=""></a></h1>
-        <p class="archive-toggle-menu">Archives</a>
+        <p class="archive-toggle-menu">Archives</p>
         <div id="ico-menu">
           <div class="inner">
             <span></span>

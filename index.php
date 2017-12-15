@@ -1,11 +1,17 @@
 <?php get_header(); ?>
 
+<div id="search_current_wrap">
+  <?php custom_taxonomies_terms_links(); ?>
+</div>
 
 <div id="bnrthumb-list">
+
       <?php $args = array(
           'post_type' => 'brands'    //投稿タイプの指定
       );
+
       if( $posts ) : foreach( $posts as $post) : setup_postdata( $post ); ?>
+
       <div class="grid-item">
         <a class="thumb_img" href="<?php echo get_the_permalink(); ?>">
           <?php if ( $image = get_field('thumb-img') ): // サムネイルを持っているときの処理 ?>
@@ -20,7 +26,7 @@
     				<p class="author ft-bold"><?php echo get_the_author_meta( 'nickname' ); ?> </p>
     				<p class="reactions">
     					<!-- <span class="comments"><i class="fa fa-commenting" aria-hidden="true"></i>0</span> -->
-    					<span class="likes"><i class="fa fa-heart" aria-hidden="true"></i>0</span>
+    					<!-- <span class="likes"><i class="fa fa-heart" aria-hidden="true"></i>0</span> -->
     				</p>
     			</div>
     		</div>
