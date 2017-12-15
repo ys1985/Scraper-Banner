@@ -6,7 +6,6 @@
           'post_type' => 'brands'    //投稿タイプの指定
       );
       if( $posts ) : foreach( $posts as $post) : setup_postdata( $post ); ?>
-  
       <div class="grid-item">
         <a class="thumb_img" href="<?php echo get_the_permalink(); ?>">
           <?php if ( $image = get_field('thumb-img') ): // サムネイルを持っているときの処理 ?>
@@ -28,7 +27,7 @@
       </div>
 
       <?php endforeach; ?>
-      <?php else : //記事が無い場合 ?>
+    <?php else : //記事が無い場合 ?>
         <div id="no-result">
           <div class="in">
             <img class="illust" src="<?php echo get_template_directory_uri() ?>/assets/images/ghost.svg" alt="">

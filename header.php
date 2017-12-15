@@ -25,6 +25,7 @@
     <header id="header">
       <div class="inner-l">
         <h1><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><img src="<?php echo get_template_directory_uri() ?>/assets/images/bdg-logo.svg" alt=""></a></h1>
+        <p class="archive-toggle-menu">Archives</a>
         <div id="ico-menu">
           <div class="inner">
             <span></span>
@@ -46,7 +47,20 @@
               <p><a href="<?php echo esc_url( home_url( '/wp-login.php' ) ); ?>">Login</p>
           <?php endif;?>
         </div>
-
+      </div>
+      <div class="archive-toggle-menu-wrap">
+        <p class="title ft-bold">Authors</p>
+        <ul class="author-profile">
+          <?php $users = get_users( array('orderby'=>ID,'order'=>ASC) );?>
+          <?php foreach ($users as $user) : ?>
+            <?php if($user->ID != "1") :?>
+              <li>
+                <a href="<?php echo get_bloginfo("url") . "/author/" . $user->user_nicename ?>"><?php echo get_avatar( $user->ID ); ?></a>
+                <span class="balloon"><?php echo $user->display_name ?></span>
+              </li>
+            <?php endif;?>
+          <?php endforeach; ?>
+        </ul>
       </div>
     </header>
     <!-- header  -->

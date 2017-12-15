@@ -81,37 +81,6 @@ add_filter( 'posts_join', 'posts_join_custom_fields', 10, 2 );
 //========================================================================================
 //カテゴリメニュー 大カテゴリチェックボックス非表示
 //========================================================================================
-// require_once(ABSPATH . '/wp-admin/includes/template.php');
-// class Danda_Category_Checklist extends Walker_Category_Checklist {
-//
-//      function start_el( &$output, $category, $depth, $args, $id = 0 ) {
-//         extract($args);
-//         if ( empty($taxonomy) )
-//             $taxonomy = 'category';
-//
-//         if ( $taxonomy == 'category' )
-//             $name = 'post_category';
-//         else
-//             $name = 'tax_input['.$taxonomy.']';
-//
-//         $class = in_array( $category->term_id, $popular_cats ) ? ' class="popular-category"' : '';
-//         //親カテゴリの時はチェックボックス表示しない
-//         if($category->parent == 0){
-//                $output .= "\n<li id='{$taxonomy}-{$category->term_id}'$class>" . '<label class="selectit">' . esc_html( apply_filters('the_category', $category->name )) . '</label>';
-//         }else{
-//             $output .= "\n<li id='{$taxonomy}-{$category->term_id}'$class>" . '<label class="selectit"><input value="' . $category->term_id . '" type="checkbox" name="'.$name.'[]" id="in-'.$taxonomy.'-' . $category->term_id . '"' . checked( in_array( $category->term_id, $selected_cats ), true, false ) . disabled( empty( $args['disabled'] ), false, false ) . ' /> ' . esc_html( apply_filters('the_category', $category->name )) . '</label>';
-//         }
-//     }
-//
-// }
-// function lig_wp_category_terms_checklist_no_top( $args, $post_id = null ) {
-//     $args['checked_ontop'] = false;
-//     $args['walker'] = new Danda_Category_Checklist();
-//     return $args;
-// }
-// add_action( 'wp_terms_checklist_args', 'lig_wp_category_terms_checklist_no_top' );
-
-
 
 // require_once locate_template('lib/init.php');        // 初期設定の関数
 // require_once locate_template('lib/cleanup.php');     // 不要なモノを削除する関数
@@ -138,7 +107,7 @@ function remove_image_attribute( $html ){
 //========================================================================================
 // 管理画面タクソノミー絞込検索用
 //========================================================================================
-add_action( 'restrict_manage_posts', 'add_post_taxonomy_restrict_filter' );
+
 function add_post_taxonomy_restrict_filter() {
     global $post_type;
     if ( 'brands' == $post_type ) {
@@ -178,11 +147,12 @@ function add_post_taxonomy_restrict_filter() {
         <?php
     }
 }
+add_action( 'restrict_manage_posts', 'add_post_taxonomy_restrict_filter' );
 
 //========================================================================================
 // カスタム投稿タイプ タクソノミー追加
 //========================================================================================
-add_action( 'init', 'create_post_type' );
+
 function create_post_type() {
   register_post_type(
    'brands',
@@ -197,7 +167,7 @@ function create_post_type() {
    )
  );
 
-/* ここから */
+
   register_taxonomy(
     'brand-category',
     'brands',
@@ -264,8 +234,9 @@ function create_post_type() {
       'rewrite' => array( 'slug' => 'size' )
     )
   );
-/* ここまでを追加 */
+
 }
+add_action( 'init', 'create_post_type' );
 
 //========================================================================================
 // 絞込用の検索機能追加
@@ -275,19 +246,6 @@ function create_post_type() {
 //タクソノミーとタームからフォームを作る関数
 //*
 function search_form_sidenav() {
-
-  //*
-  //投稿者リスト作成
-  //*
-  $users = get_users( array('orderby'=>ID,'order'=>ASC) );
-  foreach ($users as $key => $user) {
-    $uid = $user->ID;
-    $html .= '<div class="author-profile">';
-    $html .= '<span class="author-thumbanil">' . get_avatar( $uid ,40 ) .' </span> ';
-    $html .= '<span class="author-link"><a href="' . get_bloginfo("url") . "/author/" . $user->user_nicename .'">'.$user->display_name.'</a></span> ';
-    $html .= '</label>';
-    $html .= '</div>';
-  }
 
   global $wp_query, $query;
 
@@ -302,7 +260,6 @@ function search_form_sidenav() {
 
   $html .= '<form method="post" id="searchform" action="' . $action . '">';
   $html .= '<input type="hidden" name="s" value="">';
-
 
 
   $taxonomies = get_taxonomies( array(  //全タクソノミーを配列で取得
