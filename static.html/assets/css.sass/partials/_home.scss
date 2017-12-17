@@ -1,7 +1,49 @@
 /******************************************************/
 /* pc home
 /******************************************************/
-
+h2.year-ttl{
+  max-width:1280px;
+  font-size: 24px;
+  background: #eee;
+  margin:40px auto 30px auto;
+  padding: 20px;
+  border-radius: 4px;
+}
+.TwentyMinuteBnr-ttl-area{
+  max-width:1280px;
+  margin: 0px auto;
+  .author{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: 18px;
+    .date{
+      background: #333;
+      letter-spacing: 2px;
+      text-indent: 2px;
+      text-align: center;
+      font-size: 12px;
+      color: #fff;
+      margin-right: 20px;
+      border-radius: 4px;
+      padding: 2px 4px;
+    }
+    .avator{
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      img{
+        width: 40px;
+        height: 40px;
+        margin-right: 20px;
+        border-radius: 20px;
+      }
+    }
+  }
+  h3{
+    font-size: 36px;
+  }
+}
 //--------------------------
 // #search_reslut_tag
 //--------------------------

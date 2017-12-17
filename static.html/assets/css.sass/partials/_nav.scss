@@ -47,8 +47,21 @@
       padding-left: 20px;
     }
 
-    dl.search_taxonomie{
+    dl.search_year{
       margin-bottom: 20px;
+      dt{
+        font-size: 18px;
+        margin-bottom: 15px;
+        line-height: 1em;
+      }
+      dd{
+        font-size: 14px;
+        margin-bottom: 5px;
+      }
+    }
+
+    dl.search_taxonomie{
+
       input, button, textarea, select {
         margin: 0;
         padding: 0;

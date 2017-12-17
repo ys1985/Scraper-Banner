@@ -12,7 +12,7 @@
             var $contentsSlideWrap       = $('#contents-slide-wrap');
             var $window                  = $(window);
             var $header                  = $("#header");
-            var $bnrthumbList            = $('#bnrthumb-list');
+            var $bnrthumbList            = $('#bnrthumb-list.masanory-list');
             var $bnrthumbListImg         = $('#bnrthumb-list .grid-item img');
             var $pc_ico_menu             = $('#ico-menu');
             var $sp_ico_menu             = $('#sp-ico-menu');
