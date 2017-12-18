@@ -23,6 +23,7 @@ function remove_menus () {
 }
 add_action('admin_menu', 'remove_menus');
 
+
 //========================================================================================
 //* カスタムフィールドを検索対象に含めます。(「-キーワード」のようなNOT検索にも対応します)
 //========================================================================================
@@ -153,6 +154,7 @@ add_action( 'restrict_manage_posts', 'add_post_taxonomy_restrict_filter' );
 // カスタム投稿タイプ タクソノミー追加
 //========================================================================================
 
+
 function create_post_type() {
 
   //通常バナー投稿
@@ -167,6 +169,20 @@ function create_post_type() {
      'supports' => array( 'title', 'thumbnail'),
      'taxonomies' => array( 'genre' )
    )
+ );
+
+ //20分バナーカスタム投稿タイプ
+ register_post_type(
+  'twentyminutesbnr',
+  array(
+    'label' => '20分バナー投稿',
+    'public' => true,
+    'has_archive' => true,
+    'rewrite' => array( 'with_front' => false ),
+    'menu_position' => 5,
+    'supports' => array( 'title', 'thumbnail' , 'editor'),
+    'taxonomies' => array( 'genre' )
+  )
  );
 
   register_taxonomy(
@@ -237,22 +253,11 @@ function create_post_type() {
     )
   );
 
-  //20分バナーカスタム投稿タイプ
-  register_post_type(
-   'creative-bnr',
-   array(
-     'label' => '20分バナー投稿',
-     'public' => true,
-     'has_archive' => true,
-     'rewrite' => array( 'with_front' => false ),
-     'menu_position' => 5,
-     'supports' => array( 'title', 'thumbnail'),
-     'taxonomies' => array( 'genre' )
-   )
- );
+
 
 }
 add_action( 'init', 'create_post_type' );
+
 
 //========================================================================================
 // 検索中表示機能
@@ -502,6 +507,7 @@ function myFilter( $query ) {
   global $wp_query;
 
   $query->set("post_type", "brands");
+
 
   if ( !array_key_exists( 's', $query->query ) ) { //詳細ページの場合
     return $query;  //そのまま表示

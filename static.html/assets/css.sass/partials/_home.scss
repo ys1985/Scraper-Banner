@@ -1,49 +1,54 @@
 /******************************************************/
 /* pc home
 /******************************************************/
-h2.year-ttl{
-  max-width:1280px;
-  font-size: 24px;
-  background: #eee;
-  margin:40px auto 30px auto;
-  padding: 20px;
-  border-radius: 4px;
-}
-.TwentyMinuteBnr-ttl-area{
-  max-width:1280px;
-  margin: 0px auto;
-  .author{
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    font-size: 18px;
-    .date{
-      background: #333;
-      letter-spacing: 2px;
-      text-indent: 2px;
-      text-align: center;
-      font-size: 12px;
-      color: #fff;
-      margin-right: 20px;
-      border-radius: 4px;
-      padding: 2px 4px;
-    }
-    .avator{
+#twentyminutesbnr-archvie{
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 0 40px;
+  box-sizing: border-box;
+  h2.year-ttl{
+    font-size: 24px;
+    background: #eee;
+    margin:40px auto 30px auto;
+    padding:10px 20px;
+    border-radius: 4px;
+  }
+  .twentyminutesbnr-ttl-area{
+    margin: 0px auto;
+    .author{
       display: flex;
       justify-content: flex-start;
       align-items: center;
-      img{
-        width: 40px;
-        height: 40px;
+      font-size: 18px;
+      .date{
+        background: #333;
+        letter-spacing: 2px;
+        text-indent: 2px;
+        text-align: center;
+        font-size: 12px;
+        color: #fff;
         margin-right: 20px;
-        border-radius: 20px;
+        border-radius: 4px;
+        padding: 2px 4px;
+      }
+      .avator{
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        img{
+          width: 40px;
+          height: 40px;
+          margin-right: 20px;
+          border-radius: 20px;
+        }
       }
     }
-  }
-  h3{
-    font-size: 36px;
+    h3{
+      font-size: 36px;
+    }
   }
 }
+
 //--------------------------
 // #search_reslut_tag
 //--------------------------
@@ -120,7 +125,17 @@ h2.year-ttl{
 /******************************************************/
 /* sp home
 /******************************************************/
+
 @media only screen and (max-width:768px){
+  #twentyminutesbnr-archvie{
+    max-width: 100%;
+    .twentyminutesbnr-ttl-area{
+      h3{
+        font-size: 24px;
+      }
+    }
+
+  }
   #contents-slide-wrap{
     padding-top: 50px;
     margin-left: 0px;
