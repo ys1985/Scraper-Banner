@@ -12,10 +12,13 @@
     "browser-sync": "^2.18.12",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^4.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-plumber": "^1.1.0",
     "gulp-sass": "^3.1.0",
     "gulp-sourcemaps": "^2.6.0",
     "gulp-sym": "^1.0.2",
     "gulp-symlink": "^2.1.4",
+    "gulp-uglify": "^3.0.0",
     "vinyl-fs": "^3.0.0"
   },
   "dependencies": {

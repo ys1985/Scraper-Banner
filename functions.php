@@ -19,11 +19,29 @@ function remove_menus () {
     // unset($menu[75]); // ツール
     // unset($menu[80]); // 設定
     // unset($menu[90]); // メニューの線3
-
 }
 add_action('admin_menu', 'remove_menus');
 
 
+//========================================================================================
+//* PHPの正規表現でHTMLからimgタグを取得する方法
+//========================================================================================
+
+function get_content_image ( $content ) {
+	$pattern = '/<img.*?src\s*=\s*[\"|\'](.*?)[\"|\'].*?>/i';
+
+	if ( preg_match( $pattern, $content, $images ) ){
+		if ( is_array( $images ) && isset( $images[1] ) ) {
+			return $images[1];
+		} else {
+			return false;
+		}
+	} else {
+		return false;
+	}
+}
+
+add_action('wp', 'get_content_image');
 //========================================================================================
 //* カスタムフィールドを検索対象に含めます。(「-キーワード」のようなNOT検索にも対応します)
 //========================================================================================
@@ -294,7 +312,7 @@ function custom_taxonomies_terms_links(){
     if ( !empty( $terms ) ) {
       foreach ( $terms as $term ) {
         if(in_array($term->slug , $relust_tax_getparams)) {
-          var_dump($term->slug);
+          // var_dump($term->slug);
         }
         else {
 
@@ -302,7 +320,6 @@ function custom_taxonomies_terms_links(){
       }
     }
   }
-
 }
 
 function search_current_tag(){

@@ -9,6 +9,8 @@
 @import 'modules/_reset.scss';
 @import 'modules/_defaults.scss';
 @import 'modules/_buttons.scss';
+@import 'modules/_lighbox.scss';
+@import 'modules/_lightboxtheme_light.scss';
 
 //----------------------------------*\
 // SCSS MIXINS
@@ -26,7 +28,6 @@
 @import 'partials/_nav.scss';
 @import 'partials/_home.scss';
 @import 'partials/_bnrthumb-list.scss';
-
 
 //----------------------------------*\
 // WEB FONT

@@ -4,6 +4,7 @@
             var CONF = {
               $header            : $('#header'),
               $contentsSlideWrap : $('#contents-slide-wrap'),
+              $twentyMinutesBnrlink : $('#twentyminutesbnr-archvie .grid-item a'),
             }
 
             var device;
@@ -12,8 +13,8 @@
             var $contentsSlideWrap       = $('#contents-slide-wrap');
             var $window                  = $(window);
             var $header                  = $("#header");
-            var $bnrthumbList            = $('#bnrthumb-list.masanory-list');
-            var $bnrthumbListImg         = $('#bnrthumb-list .grid-item img');
+            var $bnrThumbList            = $('#bnrthumb-list.masanory-list');
+            var $bnrThumbListImg         = $('#bnrthumb-list .grid-item img');
             var $pc_ico_menu             = $('#ico-menu');
             var $sp_ico_menu             = $('#sp-ico-menu');
             var $archiveToggleMenu       = $('.archive-toggle-menu');
@@ -29,8 +30,8 @@
               });
 
               //masonry
-              $bnrthumbList.imagesLoaded(function(e){
-                $bnrthumbList.masonry({
+              $bnrThumbList.imagesLoaded(function(e){
+                $bnrThumbList.masonry({
                 // options
                 itemSelector: '.grid-item',
                 columnWidth: '.grid-item',
@@ -39,7 +40,7 @@
                 });
 
                 //masanory layoutComplete
-                $bnrthumbList.on( 'layoutComplete', function( event, items ) {
+                $bnrThumbList.on( 'layoutComplete', function( event, items ) {
                   // console.log( items.length );
                 });
               })
@@ -48,7 +49,7 @@
             }
 
             var resizeBannerWidthMax = function(){
-              $bnrthumbListImg.each(function(){
+              $bnrThumbListImg.each(function(){
                 if($(this).width() > $(this).parent().width()){
                   $(this).css({width:$(this).parent().width()})
                 }
@@ -134,6 +135,14 @@
                       $pagetop.removeClass('active');
                       $header.removeClass('fixed_fix');
                   }
+                  if($('#wpadminbar').css("display") === "block"){
+                    $header.css({top:$('#wpadminbar').height()});
+                  }
+                  else{
+
+                    $header.css({top:"0px"});
+                    $sp_ico_menu.css({top:"0px"});
+                  }
                 }
                 if(device === "SP"){
                   if($('#wpadminbar').css("display") === "block"){
@@ -172,7 +181,6 @@
                 if(device === "PC"){
                   $pc_ico_menu.show();
                   $sp_ico_menu.hide();
-                  $header.css({top:"0px"});
                 }
                 else if(device === "SP"){
                   if($('#wpadminbar').css("display") === "block" && $window.scrollTop() < $('#wpadminbar').height()){
@@ -209,20 +217,21 @@
 
         // window load
         $(window).on('load',function(){
-
+          //archive lightbox
+          BannerArchive.CONF.$twentyMinutesBnrlink.lightbox();
           if($(window).width() > 768){
             if(!BannerArchive.CONF.$contentsSlideWrap.hasClass('active')){
               BannerArchive.CONF.$header.css({width:$(window).width() - 240})
             }
           }
           BannerArchive.headerMenu();
-          BannerArchive.resonsiveReactionInit();
           BannerArchive.responsiveHandler();
           BannerArchive.categoryNavColorHadler();
         })
 
         // window resize
         $(window).on('resize',function(){
+
             if($(window).width() > 768){
               if(BannerArchive.CONF.$contentsSlideWrap.hasClass('active')){
                 BannerArchive.CONF.$header.css({width:"100%"});
@@ -235,6 +244,10 @@
               BannerArchive.CONF.$header.css({width:"100%"});
             }
             BannerArchive.responsiveHandler();
+        })
+
+        $(document).ready(function(){
+          BannerArchive.resonsiveReactionInit();
         })
 
     });

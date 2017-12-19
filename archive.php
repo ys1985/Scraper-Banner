@@ -1,4 +1,5 @@
 <?php get_header(); ?>
+
     <?php
     function change_posts_per_page($query) {
       if (is_admin()) {
@@ -21,20 +22,35 @@
       <?php $args = array(
         'post_type' => 'twentyminutesbnr' //投稿タイプ名
       );
+
       $customPosts = get_posts($args);
-      if($customPosts) : foreach($customPosts as $post) : setup_postdata( $post ); ?>
+      $thumImgArray = [];
+      $pattern = '/<img.*?src\s*=\s*[\"|\'](.*?)[\"|\'].*?>/i';
+
+      if($customPosts) : foreach($customPosts as $key => $post) : setup_postdata( $post ); ?>
       <div class="twentyminutesbnr-ttl-area">
         <p class="author">
-          <span class="date">2017.12.20</span>
-          <span class="avator"><img class="avator" alt="" src="http://0.gravatar.com/avatar/c90b1859437a3480cf2be6d94d4d7b55?s=60&amp;d=wavatar&amp;r=g" srcset="http://0.gravatar.com/avatar/c90b1859437a3480cf2be6d94d4d7b55?s=120&amp;d=wavatar&amp;r=g 2x" class="avatar avatar-60 photo" height="60" width="60">出題者：七島</span>
+          <span class="date"><?php echo get_the_date(); ?></span>
+          <span class="avator">
+            <?php $users = get_users( array('orderby'=>ID,'order'=>ASC) );?>
+            <?php echo get_avatar(get_the_author_id()); ?>出題者：<?php echo get_the_author_meta( 'nickname' ); ?>
+          </span>
         </p>
         <h3><?php the_title(); ?></h3>
       </div>
-      <div id="bnrthumb-list" class="archive">
+
+      <div id="bnrthumb-list" class="masanory-list archive">
         <?php
-          echo $post->post_content;
-         ?>
+        preg_match_all( $pattern, get_the_content(), $images );
+        $thumImgArray[] = $images;
+        ?>
+        <?php foreach ($thumImgArray[$key][0] as $key => $value): ?>
+          <div class="grid-item">
+            <a class="thumb_img" data-lightbox-gallery="photo_gallery" href="<?php echo get_content_image($value); ?>"><?php echo $value ?></a>
+          </div>
+        <?php endforeach; ?>
       </div>
+
       <?php endforeach; ?>
       <?php else : //記事が無い場合 ?>
         <div id="no-result">
@@ -48,9 +64,6 @@
       <?php endif;
       wp_reset_postdata(); //クエリのリセット ?>
     </div>
-
-
-
 
     <?php require_once locate_template('sidebar-date.php', true); ?>
 

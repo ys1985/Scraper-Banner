@@ -8,12 +8,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 <link rel="stylesheet" href="<?php echo get_template_directory_uri() ?>/assets/css/style.css">
 <link rel="stylesheet" href="<?php echo get_template_directory_uri() ?>/assets/css/font-awesome-4.7.0/font-awesome.css">
-<script type="text/javascript" src="<?php echo get_template_directory_uri() ?>/assets/js/jquery.min.js"></script>
-<script type="text/javascript" src="<?php echo get_template_directory_uri() ?>/assets/js/velocity.js"></script>
-<script type="text/javascript" src="<?php echo get_template_directory_uri() ?>/assets/js/iscroll.js"></script>
-<script type="text/javascript" src="<?php echo get_template_directory_uri() ?>/assets/js/masonry.pkgd.min.js"></script>
-<script type="text/javascript" src="<?php echo get_template_directory_uri() ?>/assets/js/imagesloaded.js"></script>
-<script type="text/javascript" src="<?php echo get_template_directory_uri() ?>/assets/js/common.js"></script>
+<script type="text/javascript" src="<?php echo get_template_directory_uri() ?>/assets/js/libs.min.js"></script>
+<script type="text/javascript" src="<?php echo get_template_directory_uri() ?>/assets/js/script.min.js"></script>
+
 
 <?php wp_head(); ?>
 
@@ -44,10 +41,11 @@
           <?php if (is_user_logged_in()) : ?>
             <a href="<?php echo esc_url( home_url( '/wp-admin' ) ); ?>"><?php $user = wp_get_current_user(); echo get_avatar($user -> ID , 30) ?><span class="balloon">Dashboard</span></a>
           <?php else :?>
-              <p><a href="<?php echo esc_url( home_url( '/wp-login.php' ) ); ?>">Login</p>
+              <p><a href="<?php echo esc_url( home_url( '/wp-login.php' ) ); ?>">Login</a></p>
           <?php endif;?>
         </div>
       </div>
+
       <div class="archive-toggle-menu-wrap">
         <div class="in_wrap">
         <p class="archive_ttl">20分バナーアーカイブ</p>

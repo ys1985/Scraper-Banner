@@ -5,9 +5,9 @@
 #bnrthumb-list{
   max-width:1280px;
   margin: 0px auto;
-  padding: 40px 0 40px 0px;
+  padding: 60px 0 60px 0px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   flex-wrap: wrap;
   .post-date{
@@ -34,6 +34,9 @@
       overflow: hidden;
       cursor: pointer;
       transition: opacity 0.2s ease;
+      &:focus{
+        outline: none;
+      }
       img{
         // width: 100%;
         height: auto!important;
@@ -81,46 +84,10 @@
   }
 }
 
-#bnrthumb-list.archive{
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  
-  a{
-    // width:calc(25% - 20px);
-    width: 300px;
-    height: 250px;
-     margin:10px 10px 10px 10px;
-     box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.2);
-     transition: box-shadow 0.2s ease;
-     &:hover{
-       box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.2);
-     }
-    .thumb_img{
-      width: 100%;
-      height: auto!important;
-      max-height: 250px!important;
-      vertical-align: bottom;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-      cursor: pointer;
-      transition: opacity 0.2s ease;
-      vertical-align:  bottom;
-      &:hover{
-        opacity: 0.8;
-      }
-    }
-  }
-}
 
 //------------------------
 // archive
 //------------------------
-#bnrthumb-list.archive{
-    padding-top:20px;
-}
 
 // @media (max-width:1360px){
 //   #bnrthumb-list{
