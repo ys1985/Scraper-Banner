@@ -297,26 +297,29 @@ function custom_taxonomies_terms_links(){
     'public'   => true,
     '_builtin' => false
   ) );
-
+  // $relust_tax_getparams = [];
   //全タクソノミーをINPUT_GETで取得
   foreach ($all_taxonomies as $all_taxonomie) {
     $all_taxonomie_Array = explode(' ' , filter_input(INPUT_GET, $all_taxonomie));
     $relust_tax_getparams[] = $all_taxonomie_Array;
+
   }
+
 
   //絞込検索された投稿のタクソノミーだけ表示
   foreach ( $taxonomies as $taxonomy_slug => $taxonomy ){
     // 投稿に付けられたタームを取得
+
     $terms = get_the_terms( $post->ID, $taxonomy_slug );
+
+    var_dump($terms);
 
     if ( !empty( $terms ) ) {
       foreach ( $terms as $term ) {
-        if(in_array($term->slug , $relust_tax_getparams)) {
-          // var_dump($term->slug);
-        }
-        else {
 
-        }
+        $term_getparams = explode(' ', $term->slug);
+        // var_dump($term->slug);
+
       }
     }
   }

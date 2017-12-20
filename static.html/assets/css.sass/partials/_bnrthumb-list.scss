@@ -5,7 +5,7 @@
 #bnrthumb-list{
   max-width:1280px;
   margin: 0px auto;
-  padding: 60px 0 60px 0px;
+  padding: 0px 0 60px 0px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -82,6 +82,10 @@
       }
     }
   }
+}
+
+#bnrthumb-list.search-list{
+  padding-top: 100px;
 }
 
 

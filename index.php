@@ -1,10 +1,7 @@
 <?php get_header(); ?>
 
-<div id="search_current_wrap">
-  <?php custom_taxonomies_terms_links(); ?>
-</div>
 
-<div id="bnrthumb-list">
+<div id="bnrthumb-list" class="search-list">
 
       <?php $args = array(
           'post_type' => 'brands'    //投稿タイプの指定
