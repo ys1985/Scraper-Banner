@@ -41,10 +41,13 @@
 
       <div id="bnrthumb-list" class="masanory-list archive">
         <?php
-        preg_match_all( $pattern, get_the_content(), $images );
+        $content = get_the_content();
+
+        preg_match_all( $pattern, $content, $images );
         $thumImgArray[] = $images;
         ?>
         <?php foreach ($thumImgArray[$key][0] as $key => $value): ?>
+
           <div class="grid-item">
             <a class="thumb_img" data-lightbox-gallery="photo_gallery" href="<?php echo get_content_image($value); ?>"><?php echo $value ?></a>
           </div>

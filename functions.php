@@ -28,6 +28,7 @@ add_action('admin_menu', 'remove_menus');
 //========================================================================================
 
 function get_content_image ( $content ) {
+
 	$pattern = '/<img.*?src\s*=\s*[\"|\'](.*?)[\"|\'].*?>/i';
 
 	if ( preg_match( $pattern, $content, $images ) ){
@@ -41,7 +42,7 @@ function get_content_image ( $content ) {
 	}
 }
 
-add_action('wp', 'get_content_image');
+add_action('init', 'get_content_image');
 //========================================================================================
 //* カスタムフィールドを検索対象に含めます。(「-キーワード」のようなNOT検索にも対応します)
 //========================================================================================

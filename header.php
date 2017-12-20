@@ -6,10 +6,10 @@
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-<link rel="stylesheet" href="<?php echo get_template_directory_uri() ?>/assets/css/style.css">
-<link rel="stylesheet" href="<?php echo get_template_directory_uri() ?>/assets/css/font-awesome-4.7.0/font-awesome.css">
-<script type="text/javascript" src="<?php echo get_template_directory_uri() ?>/assets/js/libs.min.js"></script>
-<script type="text/javascript" src="<?php echo get_template_directory_uri() ?>/assets/js/script.min.js"></script>
+<link rel="stylesheet" href="<?php echo get_stylesheet_directory_uri() ?>/assets/css/style.css">
+<link rel="stylesheet" href="<?php echo get_stylesheet_directory_uri() ?>/assets/css/font-awesome-4.7.0/font-awesome.css">
+<script type="text/javascript" src="<?php echo get_stylesheet_directory_uri() ?>/assets/js/libs.min.js"></script>
+<script type="text/javascript" src="<?php echo get_stylesheet_directory_uri() ?>/assets/js/script.min.js"></script>
 
 
 <?php wp_head(); ?>
