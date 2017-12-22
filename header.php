@@ -2,10 +2,11 @@
 <html <?php language_attributes(); ?>>
 <head>
 <meta charset="UTF-8">
-<title>Scraper-BannerArchive</title>
+<title>Scraper-Banner</title>
 <meta name="description" content="">
 <meta name="keywords" content="">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<link rel="stylesheet" href="<?php echo get_stylesheet_directory_uri() ?>/style.css">
 <link rel="stylesheet" href="<?php echo get_stylesheet_directory_uri() ?>/assets/css/style.css">
 <link rel="stylesheet" href="<?php echo get_stylesheet_directory_uri() ?>/assets/css/font-awesome-4.7.0/font-awesome.css">
 <script type="text/javascript" src="<?php echo get_stylesheet_directory_uri() ?>/assets/js/libs.min.js"></script>

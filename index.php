@@ -3,6 +3,7 @@
 
 <div id="bnrthumb-list" class="search-list">
 
+
       <?php $args = array(
           'post_type' => 'brands'    //投稿タイプの指定
       );

@@ -16,8 +16,9 @@
       if ($year != get_the_date('Y')){ // 同じ年でなければ表示
         $year = get_the_date('Y'); // 年の取得
         $month = get_the_date('n');
-      echo '<li><a href="'.home_url( '/', 'http' ).'twentyminutesbnr/'.$year.'">'.$year.'年</a></li>'; // 年別アーカイブリストの表示
-      echo '<li><a href="'.home_url( '/', 'http' ).'twentyminutesbnr/'.$year.'/'.$month.'">'.$month.'月</a></li>'; // 年別アーカイブリストの表示
+        $day = get_the_date('j');
+        echo '<li><a href="'.home_url( '/', 'http' ).'twentyminutesbnr/'.$year.'">'.$year.'年</a></li>'; // 年別アーカイブリストの表示
+        echo '<li><a href="'.home_url( '/', 'http' ).'twentyminutesbnr/'.$year.'/'.$month.'/'.$day.'">'.$year.'年'.$month.'月'.$day.'日</a></li>'; // 年別アーカイブリストの表示
       }
       endwhile; // ループの終了
       echo '</ul>';

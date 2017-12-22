@@ -2,11 +2,9 @@
 
 
 <div id="bnrthumb-list" class="search-list">
+      <p>Authorページです。</p>
 
-      <?php $args = array(
-          'post_type' => 'brands'    //投稿タイプの指定
-      );
-
+      <?php
       if( $posts ) : foreach( $posts as $post) : setup_postdata( $post ); ?>
 
       <div class="grid-item">
@@ -20,7 +18,7 @@
         <div class="body">
     			<p class="thumbnail"><?php echo get_avatar(get_the_author_id() , 40); ?></p>
     			<div class="info">
-    				<p class="author ft-bold"><?php echo get_the_author_meta( 'nickname' ); ?> </p>
+    				<p class="author ft-bold"><?php echo get_the_author_meta( 'nickname' ); ?></p>
     				<p class="reactions">
     					<!-- <span class="comments"><i class="fa fa-commenting" aria-hidden="true"></i>0</span> -->
     					<!-- <span class="likes"><i class="fa fa-heart" aria-hidden="true"></i>0</span> -->

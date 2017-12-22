@@ -1,5 +1,6 @@
 <?php
 
+
 //========================================================================================
 //管理画面左メニュー 表示設定
 //========================================================================================
@@ -98,19 +99,6 @@ function posts_join_custom_fields( $join, $query ) {
 }
 add_filter( 'posts_join', 'posts_join_custom_fields', 10, 2 );
 
-//========================================================================================
-//カテゴリメニュー 大カテゴリチェックボックス非表示
-//========================================================================================
-
-// require_once locate_template('lib/init.php');        // 初期設定の関数
-// require_once locate_template('lib/cleanup.php');     // 不要なモノを削除する関数
-// require_once locate_template('lib/titles.php');      // タイトル出力の関数
-// require_once locate_template('lib/breadcrumbs.php'); // パンくずリストの関数
-// require_once locate_template('lib/scripts.php');     // CSSやJavascript関連の関数
-// require_once locate_template('lib/ads.php');         // 広告関連の関数
-// require_once locate_template('lib/widgets.php');     // サイドバー、ウィジェットの関数
-// require_once locate_template('lib/custom.php');      // その他カスタマイズの関数
-
 
 //========================================================================================
 //画像貼り付け時の自動挿入タグを削除
@@ -183,7 +171,7 @@ function create_post_type() {
      'label' => 'バナー投稿',
      'public' => true,
      'has_archive' => true,
-     'rewrite' => array( 'with_front' => false ),
+     'rewrite' => array('with_front' => false ),
      'menu_position' => 5,
      'supports' => array( 'title', 'thumbnail'),
      'taxonomies' => array( 'genre' )
@@ -199,7 +187,7 @@ function create_post_type() {
     'has_archive' => true,
     'rewrite' => array( 'with_front' => false ),
     'menu_position' => 5,
-    'supports' => array( 'title', 'thumbnail' , 'editor'),
+    'supports' => array( 'title' , 'thumbnail'),
     'taxonomies' => array( 'genre' )
   )
  );
@@ -278,10 +266,17 @@ function create_post_type() {
 add_action( 'init', 'create_post_type' );
 
 
+function wp_redirect_url_swithc($url){
+  $http = is_ssl() ? 'https' : 'http' . '://';
+  $url = $http . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+  $url = strtok($url, '?');
+  return $url;
+}
+add_action('wp','wp_redirect_url_swithc');
+
 //========================================================================================
 // 検索中表示機能
 //========================================================================================
-
 
 // （タクソノミーと）タームのリンクを取得する
 function custom_taxonomies_terms_links(){
@@ -303,9 +298,7 @@ function custom_taxonomies_terms_links(){
   foreach ($all_taxonomies as $all_taxonomie) {
     $all_taxonomie_Array = explode(' ' , filter_input(INPUT_GET, $all_taxonomie));
     $relust_tax_getparams[] = $all_taxonomie_Array;
-
   }
-
 
   //絞込検索された投稿のタクソノミーだけ表示
   foreach ( $taxonomies as $taxonomy_slug => $taxonomy ){
@@ -430,10 +423,14 @@ function search_form_sidenav() {
 
 }
 
+
+
+
 //*
 // カスタムクエリ追加
 //*
 function myQueryVars( $public_query_vars ) {
+
   $taxonomies = get_taxonomies( array(  //前回作ったタクソノミーを取得
   'public'   => true,
   '_builtin' => false
@@ -442,6 +439,7 @@ function myQueryVars( $public_query_vars ) {
   foreach ( $taxonomies as $taxonomie ) {  //それを回す
     $public_query_vars[] = $taxonomie;  //カスタムクエリを既存のクエリに追加
   }
+
 
   return $public_query_vars;
 }
@@ -510,13 +508,7 @@ function myRequest( $vars ) {
 }
 add_filter( 'request', 'myRequest');   //追加クエリ変数・プライベートクエリ変数が追加された後に適用される。
 
-function wp_redirect_url_swithc($url){
-  $http = is_ssl() ? 'https' : 'http' . '://';
-  $url = $http . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-  $url = strtok($url, '?');
-  return $url;
-}
-add_action('wp','wp_redirect_url_swithc');
+
 //*
 //パラメーターを元にtax_queryを作る
 //*
@@ -527,8 +519,11 @@ function myFilter( $query ) {
   }
   global $wp_query;
 
+  //トップはpost_typeをbrands
+  // if (is_home() || is_author()) {
+  //   $query->set("post_type", "brands");
+  // }
   $query->set("post_type", "brands");
-
 
   if ( !array_key_exists( 's', $query->query ) ) { //詳細ページの場合
     return $query;  //そのまま表示
