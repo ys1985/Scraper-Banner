@@ -178,20 +178,6 @@ function create_post_type() {
    )
  );
 
- //20分バナーカスタム投稿タイプ
- register_post_type(
-  'twentyminutesbnr',
-  array(
-    'label' => '20分バナー投稿',
-    'public' => true,
-    'has_archive' => true,
-    'rewrite' => array( 'with_front' => false ),
-    'menu_position' => 5,
-    'supports' => array( 'title' , 'thumbnail'),
-    'taxonomies' => array( 'genre' )
-  )
- );
-
   register_taxonomy(
     'brand-category',
     'brands',
@@ -256,10 +242,37 @@ function create_post_type() {
       'singular_label' => 'タグ',
       'public' => true,
       'show_ui' => true,
-      'rewrite' => array( 'slug' => 'size' )
+      'rewrite' => array( 'slug' => 'tag' )
     )
   );
 
+  //20分バナーカスタム投稿タイプ
+  register_post_type(
+   'twentyminutesbnr',
+   array(
+     'label' => '20分バナー投稿',
+     'public' => true,
+     'has_archive' => true,
+     'rewrite' => array( 'with_front' => false ),
+     'menu_position' => 5,
+     'supports' => array( 'title' , 'thumbnail'),
+     'taxonomies' => array( 'genre' )
+   )
+  );
+
+  register_taxonomy(
+    'title',
+    'twentyminutesbnr',
+    array(
+      'hierarchical' => true, /* 親子関係が必要なければ false */
+      'update_count_callback' => '_update_post_term_count',
+      'label' => 'お題',
+      'singular_label' => 'お題',
+      'public' => true,
+      'show_ui' => true,
+      'rewrite' => array( 'slug' => 'title' )
+    )
+  );
 
 
 }
@@ -424,8 +437,6 @@ function search_form_sidenav() {
 }
 
 
-
-
 //*
 // カスタムクエリ追加
 //*
@@ -520,10 +531,10 @@ function myFilter( $query ) {
   global $wp_query;
 
   //トップはpost_typeをbrands
-  // if (is_home() || is_author()) {
-  //   $query->set("post_type", "brands");
-  // }
-  $query->set("post_type", "brands");
+  if (is_home() || is_author()) {
+    $query->set("post_type", "brands");
+  }
+  // $query->set("post_type", "brands");
 
   if ( !array_key_exists( 's', $query->query ) ) { //詳細ページの場合
     return $query;  //そのまま表示
