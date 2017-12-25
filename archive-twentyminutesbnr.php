@@ -8,6 +8,7 @@
     $customPosts = query_posts($args);
     if($customPosts) : foreach($customPosts as $key => $post) : setup_postdata( $post ); ?>
       <?php echo get_the_title(); ?>
+      
     <?php endforeach; ?>
     <?php endif; wp_reset_postdata(); //クエリのリセット ?>
     </div>
