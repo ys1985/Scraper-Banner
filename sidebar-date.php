@@ -1,7 +1,23 @@
 <div id="sidenav-wrapper">
   <nav id="category-nav">
+
     <div class="scroller">
       <p>20分バナーアーカイブ</p>
+
+      <?php $term = get_query_var('bnr_theme') ?>
+      <?php $args = array(
+        'post_type' => 'twentyminutesbnr',
+        'tax_query' => array(
+          array(
+            'taxonomy' => 'bnr_theme',
+            'field' => 'slug',
+            'terms' => $term
+          )
+        )
+      );?>
+      <?php $query_term = new WP_Query( $args ); ?>
+
+
       <?php // 年別アーカイブリストを表示
       $year=NULL; // 年の初期化
       $month=NULL;
@@ -18,7 +34,6 @@
         $month = get_the_date('n');
         $day = get_the_date('j');
         echo '<li><a href="'.home_url( '/', 'http' ).'twentyminutesbnr/'.$year.'">'.$year.'年</a></li>'; // 年別アーカイブリストの表示
-        echo '<li><a href="'.home_url( '/', 'http' ).'twentyminutesbnr/'.$year.'/'.$month.'/'.$day.'">'.$year.'年'.$month.'月'.$day.'日</a></li>'; // 年別アーカイブリストの表示
       }
       endwhile; // ループの終了
       echo '</ul>';

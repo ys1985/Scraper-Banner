@@ -218,7 +218,7 @@
         // window load
         $(window).on('load',function(){
           //archive lightbox
-          BannerArchive.CONF.$twentyMinutesBnrlink.lightbox();
+          // BannerArchive.CONF.$twentyMinutesBnrlink.lightbox();
           if($(window).width() > 768){
             if(!BannerArchive.CONF.$contentsSlideWrap.hasClass('active')){
               BannerArchive.CONF.$header.css({width:$(window).width() - 240})

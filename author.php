@@ -2,8 +2,7 @@
 
 
 <div id="bnrthumb-list" class="search-list">
-      <p>Authorページです。</p>
-
+    
       <?php
       if( $posts ) : foreach( $posts as $post) : setup_postdata( $post ); ?>
 

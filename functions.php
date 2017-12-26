@@ -253,7 +253,7 @@ function create_post_type() {
      'label' => '20分バナー投稿',
      'public' => true,
      'has_archive' => true,
-     'rewrite' => array( 'with_front' => false ),
+     'rewrite' => array('with_front' => false ),
      'menu_position' => 5,
      'supports' => array( 'title' , 'thumbnail'),
      'taxonomies' => array( 'genre' )
@@ -261,7 +261,7 @@ function create_post_type() {
   );
 
   register_taxonomy(
-    'title',
+    'bnr_theme',
     'twentyminutesbnr',
     array(
       'hierarchical' => true, /* 親子関係が必要なければ false */
@@ -270,13 +270,14 @@ function create_post_type() {
       'singular_label' => 'お題',
       'public' => true,
       'show_ui' => true,
-      'rewrite' => array( 'slug' => 'title' )
+      'rewrite' => array( 'slug' => 'bnr_theme' )
     )
   );
 
-
 }
 add_action( 'init', 'create_post_type' );
+
+
 
 
 function wp_redirect_url_swithc($url){
@@ -530,11 +531,10 @@ function myFilter( $query ) {
   }
   global $wp_query;
 
-  //トップはpost_typeをbrands
-  if (is_home() || is_author()) {
+  //post_type 20分バナー以外brands
+  if ($query->query["post_type"] != "twentyminutesbnr") {
     $query->set("post_type", "brands");
   }
-  // $query->set("post_type", "brands");
 
   if ( !array_key_exists( 's', $query->query ) ) { //詳細ページの場合
     return $query;  //そのまま表示
