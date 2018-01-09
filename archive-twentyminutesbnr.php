@@ -1,6 +1,41 @@
 <?php get_header(); ?>
 
+
+
     <div id="twentyminutesbnr-archvie">
+
+      <?php
+      $year = get_the_date('Y');
+
+
+      $args = array(
+      'post_type' => 'twentyminutesbnr' , //投稿タイプ名
+      'post_status' => 'publish'
+      );
+      if ($year) {
+      $start_date = $year.'/1/1';
+      $end_date = ($year+1).'/12/31 23:59:59';
+      $args += array('date_query' => array (
+      'compare' => 'BETWEEN',
+      'after' => $start_date,
+      'before' => $end_date,
+      'inclusive' => true
+      ));
+      }
+
+      $query = new WP_Query($args);
+      if($query) : foreach($query as $key => $post) : setup_postdata( $post ); ?>
+
+      <?php
+        $terms = get_the_terms($post->ID, 'bnr_theme');
+        foreach($terms as $term) {
+          $link1 = get_term_link($term->slug, $term->taxonomy);
+          $str_grep1 = preg_replace('/(\/twentyminutesbnr)/', '', $link1);
+        }
+      ?>
+
+      <?php endforeach; ?>
+      <?php endif; wp_reset_postdata(); //クエリのリセット ?>
 
       <?php
       if (is_year()) {
@@ -10,13 +45,14 @@
       }
       ?>
       <div id="bnrthumb-list" class="twentyminutesbnr">
+
       <?php
       $args = array(
         'post_type' => 'twentyminutesbnr' //投稿タイプ名
       );
       $customPosts = query_posts($args);
-
       if($customPosts) : foreach($customPosts as $key => $post) : setup_postdata( $post ); ?>
+
 
       <?php
       $terms = get_the_terms($post->ID, 'bnr_theme');
@@ -26,7 +62,9 @@
       }
       ?>
 
+
       <?php if (get_field('author') === "questions"): ?>
+
         <div class="grid-item">
 
           <a class="thumb_img" href="<?php echo $str_grep ?>">
@@ -44,6 +82,7 @@
             <img src="<?php echo get_template_directory_uri(); ?>/assets/images/no-image.jpg" alt="no image" title="no image" />
             <?php endif; ?>
           </a>
+
           <div class="body">
       			<p class="thumbnail"><?php echo get_avatar(get_the_author_id() , 40); ?></p>
       			<div class="info">
@@ -55,6 +94,7 @@
       			</div>
       		</div>
         </div>
+
       <?php endif ?>
       <?php endforeach; ?>
       <?php endif; wp_reset_postdata(); //クエリのリセット ?>
