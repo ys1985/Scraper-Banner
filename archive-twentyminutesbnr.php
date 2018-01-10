@@ -5,8 +5,18 @@
     <div id="twentyminutesbnr-archvie">
 
       <?php
-      $year = get_the_date('Y');
+      if (is_year()) {
+          echo $html .= '<h2 class="year-ttl">'.get_the_date('Y').'</h2>';
+      } elseif (is_month()) {
+          echo $html .= '<h2 class="year-ttl">'.get_the_date('Y.n').'</h2>';
+      }
+      ?>
 
+
+      <div id="bnrthumb-list" class="twentyminutesbnr">
+
+      <?php
+      $year = get_the_date('Y');
 
       $args = array(
       'post_type' => 'twentyminutesbnr' , //投稿タイプ名
@@ -14,7 +24,7 @@
       );
       if ($year) {
       $start_date = $year.'/1/1';
-      $end_date = ($year+1).'/12/31 23:59:59';
+      $end_date = $year.'/12/31 23:59:59';
       $args += array('date_query' => array (
       'compare' => 'BETWEEN',
       'after' => $start_date,
@@ -24,35 +34,7 @@
       }
 
       $query = new WP_Query($args);
-      if($query) : foreach($query as $key => $post) : setup_postdata( $post ); ?>
-
-      <?php
-        $terms = get_the_terms($post->ID, 'bnr_theme');
-        foreach($terms as $term) {
-          $link1 = get_term_link($term->slug, $term->taxonomy);
-          $str_grep1 = preg_replace('/(\/twentyminutesbnr)/', '', $link1);
-        }
-      ?>
-
-      <?php endforeach; ?>
-      <?php endif; wp_reset_postdata(); //クエリのリセット ?>
-
-      <?php
-      if (is_year()) {
-          echo $html .= '<h2 class="year-ttl">'.get_the_date('Y').'</h2>';
-      } elseif (is_month()) {
-          echo $html .= '<h2 class="year-ttl">'.get_the_date('Y.n').'</h2>';
-      }
-      ?>
-      <div id="bnrthumb-list" class="twentyminutesbnr">
-
-      <?php
-      $args = array(
-        'post_type' => 'twentyminutesbnr' //投稿タイプ名
-      );
-      $customPosts = query_posts($args);
-      if($customPosts) : foreach($customPosts as $key => $post) : setup_postdata( $post ); ?>
-
+      if($query->have_posts()) : while($query->have_posts()): $query->the_post(); ?>
 
       <?php
       $terms = get_the_terms($post->ID, 'bnr_theme');
@@ -61,7 +43,6 @@
         $str_grep = preg_replace('/(\/twentyminutesbnr)/', '', $link);
       }
       ?>
-
 
       <?php if (get_field('author') === "questions"): ?>
 
@@ -96,8 +77,9 @@
         </div>
 
       <?php endif ?>
-      <?php endforeach; ?>
+      <?php endwhile; ?>
       <?php endif; wp_reset_postdata(); //クエリのリセット ?>
+
       </div>
 
     </div>

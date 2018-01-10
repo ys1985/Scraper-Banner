@@ -45,7 +45,7 @@
       $domestic_post = get_posts($args);?>
 
       <?php if($domestic_post) : foreach($domestic_post as $post) : setup_postdata( $post ); ?>
-
+      <?php if (get_field('author') === "author"): ?>
       <div class="grid-item">
         <a class="thumb_img" href="<?php echo $str_grep ?>">
           <div class="gradient"></div>
@@ -72,6 +72,7 @@
           </div>
         </div>
       </div>
+      <?php endif ?>
       <?php endforeach; ?>
       <?php else : //記事が存在しない場合 ?>
       <p>表示する記事がありません。</p>

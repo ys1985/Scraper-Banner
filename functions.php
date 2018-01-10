@@ -278,8 +278,6 @@ function create_post_type() {
 add_action( 'init', 'create_post_type' );
 
 
-
-
 function wp_redirect_url_swithc($url){
   $http = is_ssl() ? 'https' : 'http' . '://';
   $url = $http . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
@@ -392,6 +390,8 @@ function search_form_sidenav() {
 
   foreach( $taxonomies as $key => $taxonomie ) {  //タクソノミー配列を回す
     switch ($taxonomie) {
+      case 'bnr_theme':
+      break;
       case 'color':
         $html .= '<dl class="search_taxonomie color"><dt>' . get_taxonomy($taxonomie)->labels->name . '</dt>';
         break;
@@ -416,7 +416,10 @@ function search_form_sidenav() {
         else {
           $checked = "";
         }
+
         switch ($taxonomie) {
+          case 'bnr_theme':
+          break;
           case 'color':
             $html .= '<dd class="'. $term->slug . '"><input type="checkbox" id="' . $term->slug . '" name="' . $term->taxonomy . '[]" value="' . $term->slug  . '"' . ' ' . $checked . '><label for="' . $term->slug . '" class="checkbox"><span class="color-tip"></span></label><span class="bubble">' . $term->name  . '</span></dd>';
               break;
@@ -424,9 +427,12 @@ function search_form_sidenav() {
           $html .= '<dd><input type="checkbox" id="' . $term->slug . '" name="' . $term->taxonomy . '[]" value="' . $term->slug . '"' . ' ' . $checked . '><label for="' . $term->slug . '" class="checkbox">' . $term->name  . '</label></dd>';
             break;
         }
+
       }
       $html .= '</dl>';
-      $html .= '<div class="clear"><div class="searchsubmit"><input type="submit" class="searchsubmit" value="OK"></div></div>';
+      if($taxonomie != 'bnr_theme'){
+          $html .= '<div class="clear"><div class="searchsubmit"><input type="submit" class="searchsubmit" value="OK"></div></div>';
+      }
     }
 
   }
