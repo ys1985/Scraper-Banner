@@ -38,7 +38,7 @@
 
       <?php
       $terms = get_the_terms($post->ID, 'bnr_theme');
-      foreach($terms as $term) {
+      foreach((array)$terms as $term) {
         $link = get_term_link($term->slug, $term->taxonomy);
         $str_grep = preg_replace('/(\/twentyminutesbnr)/', '', $link);
       }
