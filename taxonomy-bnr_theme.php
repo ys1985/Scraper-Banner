@@ -34,6 +34,7 @@
       <?php $term = get_query_var('bnr_theme') ?>
       <?php $args = array(
         'post_type' => 'twentyminutesbnr',
+        'posts_per_page' => '-1',
         'tax_query' => array(
           array(
             'taxonomy' => 'bnr_theme',
@@ -48,11 +49,7 @@
       <?php if (get_field('author') === "author"): ?>
       <div class="grid-item">
         <a class="thumb_img" href="<?php echo $str_grep ?>">
-          <div class="gradient"></div>
-          <div class="meta">
-            <p class="title"><?php echo get_the_title(); ?></p>
-            <p class ="date"><?php echo get_the_date(); ?></p>
-          </div>
+
           <?php if ( $image = get_field('winner-img') ): ?>
           <img src="<?php echo $image ?>" alt="" title="" />
           <?php elseif ( $image = get_field('thumb-img') ): ?>

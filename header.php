@@ -80,7 +80,7 @@
             <?php if($user->ID != "1") :?>
               <li>
                 <a href="<?php echo get_bloginfo("url") . "/author/" . $user->user_nicename ?>"><?php echo get_avatar( $user->ID ); ?></a>
-                <span class="balloon"><?php echo $user->display_name ?></span>
+                <span class="balloon"><pre><?php echo $user->display_name ?></pre></span>
               </li>
             <?php endif;?>
           <?php endforeach; ?>
