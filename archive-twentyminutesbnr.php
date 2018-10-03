@@ -86,7 +86,7 @@
     </div>
       <!-- /twentyminutesbnr-archvie -->
 
-    <?php require_once locate_template('sidebar-date.php', true); ?>
+    <?php require_once locate_template('twentyminutesbnr-sidebar.php', true); ?>
 
   </div>
   <!-- /contents-slide-wrap -->

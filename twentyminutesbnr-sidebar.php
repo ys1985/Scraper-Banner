@@ -17,7 +17,6 @@
       );?>
       <?php $query_term = new WP_Query( $args ); ?>
 
-
       <?php // 年別アーカイブリストを表示
       $year=NULL; // 年の初期化
       $month=NULL;
